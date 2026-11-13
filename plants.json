@@ -1,0 +1,232 @@
+{
+  "metadata": {
+    "region": "Angola",
+    "challenge": "NASA Space Apps - Field Shift",
+    "version": "1.0",
+    "units": {
+      "water_mm": "mm por ciclo",
+      "temp_c": "Graus Celsius",
+      "cycle_days": "Dias"
+    }
+  },
+  "crops": [
+    {
+      "id": "milho",
+      "name_pt": "Milho",
+      "scientific_name": "Zea mays",
+      "botanical_family": "Poaceae",
+      "role_in_rotation": "Cultura Principal / Alto Consumo",
+      "nitrogen_impact": "Extrator intenso (esgota azoto do solo)",
+      "nitrogen_fixation_kg_ha": 0,
+      "climate_requirements": {
+        "temp_min_c": 15.0,
+        "temp_optimal_min_c": 24.0,
+        "temp_optimal_max_c": 30.0,
+        "temp_max_stress_c": 35.0,
+        "water_need_mm_min": 500,
+        "water_need_mm_max": 600,
+        "drought_tolerance": "Baixa (crítica na floração)"
+      },
+      "soil_requirements": {
+        "ph_min": 5.5,
+        "ph_max": 7.5,
+        "preferred_texture": ["Franco", "Franco-argiloso"],
+        "erosion_protection": "Média"
+      },
+      "angola_calendar": {
+        "cycle_days": 120,
+        "planting_months": [10, 11, 12],
+        "harvest_months": [2, 3]
+      },
+      "good_successors": ["feijao_vulgar", "feijao_macunde", "ginguba", "soja"],
+      "pest_risk_if_monoculture": ["Lagarta-do-cartucho (Spodoptera frugiperda)"]
+    },
+    {
+      "id": "feijao_macunde",
+      "name_pt": "Feijão-macunde (Caupi)",
+      "scientific_name": "Vigna unguiculata",
+      "botanical_family": "Fabaceae",
+      "role_in_rotation": "Fixador de Azoto / Resiliência à Seca",
+      "nitrogen_impact": "Fixador biológico (enriquece o solo)",
+      "nitrogen_fixation_kg_ha": 60,
+      "climate_requirements": {
+        "temp_min_c": 18.0,
+        "temp_optimal_min_c": 25.0,
+        "temp_optimal_max_c": 32.0,
+        "temp_max_stress_c": 38.0,
+        "water_need_mm_min": 300,
+        "water_need_mm_max": 450,
+        "drought_tolerance": "Alta"
+      },
+      "soil_requirements": {
+        "ph_min": 5.0,
+        "ph_max": 7.5,
+        "preferred_texture": ["Franco-arenoso", "Franco"],
+        "erosion_protection": "Alta (cobertura rápida do solo)"
+      },
+      "angola_calendar": {
+        "cycle_days": 75,
+        "planting_months": [10, 11, 12, 1],
+        "harvest_months": [4, 5]
+      },
+      "good_successors": ["milho", "massambala", "batata_doce"],
+      "pest_risk_if_monoculture": ["Gorgulho", "Pulgão"]
+    },
+    {
+      "id": "feijao_vulgar",
+      "name_pt": "Feijão Vulgar (Manteiga / Catarino)",
+      "scientific_name": "Phaseolus vulgaris",
+      "botanical_family": "Fabaceae",
+      "role_in_rotation": "Fixador de Azoto / Rendimento Comercial",
+      "nitrogen_impact": "Fixador biológico moderado",
+      "nitrogen_fixation_kg_ha": 40,
+      "climate_requirements": {
+        "temp_min_c": 14.0,
+        "temp_optimal_min_c": 18.0,
+        "temp_optimal_max_c": 24.0,
+        "temp_max_stress_c": 30.0,
+        "water_need_mm_min": 350,
+        "water_need_mm_max": 500,
+        "drought_tolerance": "Média-Baixa"
+      },
+      "soil_requirements": {
+        "ph_min": 5.8,
+        "ph_max": 7.0,
+        "preferred_texture": ["Franco", "Franco-argiloso"],
+        "erosion_protection": "Média-Alta"
+      },
+      "angola_calendar": {
+        "cycle_days": 90,
+        "planting_months": [10, 11, 12],
+        "harvest_months": [5, 6]
+      },
+      "good_successors": ["milho", "batata_rena"],
+      "pest_risk_if_monoculture": ["Antracnose", "Mosca-branca"]
+    },
+    {
+      "id": "mandioca",
+      "name_pt": "Mandioca",
+      "scientific_name": "Manihot esculenta",
+      "botanical_family": "Euphorbiaceae",
+      "role_in_rotation": "Segurança Alimentar / Tolerância Extrema",
+      "nitrogen_impact": "Extrator moderado (especialmente Potássio)",
+      "nitrogen_fixation_kg_ha": 0,
+      "climate_requirements": {
+        "temp_min_c": 16.0,
+        "temp_optimal_min_c": 25.0,
+        "temp_optimal_max_c": 29.0,
+        "temp_max_stress_c": 38.0,
+        "water_need_mm_min": 600,
+        "water_need_mm_max": 1000,
+        "drought_tolerance": "Muito Alta (sobrevive ao cacimbo)"
+      },
+      "soil_requirements": {
+        "ph_min": 4.5,
+        "ph_max": 7.0,
+        "preferred_texture": ["Franco-arenoso", "Franco"],
+        "erosion_protection": "Alta (após fechamento da copa)"
+      },
+      "angola_calendar": {
+        "cycle_days": 300,
+        "planting_months": [10, 11, 12, 1],
+        "harvest_months": [8, 9, 10]
+      },
+      "good_successors": ["ginguba", "feijao_macunde"],
+      "pest_risk_if_monoculture": ["Mosaico da mandioca", "Cochonilha"]
+    },
+    {
+      "id": "ginguba",
+      "name_pt": "Ginguba (Amendoim)",
+      "scientific_name": "Arachis hypogaea",
+      "botanical_family": "Fabaceae",
+      "role_in_rotation": "Fixador de Azoto / Solos Arenosos",
+      "nitrogen_impact": "Fixador biológico alto",
+      "nitrogen_fixation_kg_ha": 70,
+      "climate_requirements": {
+        "temp_min_c": 18.0,
+        "temp_optimal_min_c": 25.0,
+        "temp_optimal_max_c": 30.0,
+        "temp_max_stress_c": 36.0,
+        "water_need_mm_min": 450,
+        "water_need_mm_max": 600,
+        "drought_tolerance": "Média-Alta"
+      },
+      "soil_requirements": {
+        "ph_min": 5.5,
+        "ph_max": 7.0,
+        "preferred_texture": ["Arenoso", "Franco-arenoso"],
+        "erosion_protection": "Alta (cobertura rasteira)"
+      },
+      "angola_calendar": {
+        "cycle_days": 110,
+        "planting_months": [10, 11, 12],
+        "harvest_months": [2, 3]
+      },
+      "good_successors": ["milho", "massambala", "mandioca"],
+      "pest_risk_if_monoculture": ["Cercosporiose", "Aflatoxinas"]
+    },
+    {
+      "id": "massambala",
+      "name_pt": "Massambala (Sorgo)",
+      "scientific_name": "Sorghum bicolor",
+      "botanical_family": "Poaceae",
+      "role_in_rotation": "Substituto do Milho em Zonas Secas",
+      "nitrogen_impact": "Extrator moderado",
+      "nitrogen_fixation_kg_ha": 0,
+      "climate_requirements": {
+        "temp_min_c": 16.0,
+        "temp_optimal_min_c": 26.0,
+        "temp_optimal_max_c": 33.0,
+        "temp_max_stress_c": 40.0,
+        "water_need_mm_min": 350,
+        "water_need_mm_max": 500,
+        "drought_tolerance": "Muito Alta (entra em dormência na seca)"
+      },
+      "soil_requirements": {
+        "ph_min": 5.0,
+        "ph_max": 8.0,
+        "preferred_texture": ["Franco", "Argiloso", "Franco-arenoso"],
+        "erosion_protection": "Média"
+      },
+      "angola_calendar": {
+        "cycle_days": 115,
+        "planting_months": [10, 11, 12],
+        "harvest_months": [3, 4]
+      },
+      "good_successors": ["feijao_macunde", "ginguba"],
+      "pest_risk_if_monoculture": ["Pássaros", "Lagarta-do-cartucho"]
+    },
+    {
+      "id": "batata_doce",
+      "name_pt": "Batata-doce",
+      "scientific_name": "Ipomoea batatas",
+      "botanical_family": "Convolvulaceae",
+      "role_in_rotation": "Cobertura de Solo / Quebra de Pragas",
+      "nitrogen_impact": "Extrator moderado",
+      "nitrogen_fixation_kg_ha": 0,
+      "climate_requirements": {
+        "temp_min_c": 15.0,
+        "temp_optimal_min_c": 22.0,
+        "temp_optimal_max_c": 28.0,
+        "temp_max_stress_c": 35.0,
+        "water_need_mm_min": 400,
+        "water_need_mm_max": 600,
+        "drought_tolerance": "Alta"
+      },
+      "soil_requirements": {
+        "ph_min": 5.0,
+        "ph_max": 6.8,
+        "preferred_texture": ["Franco-arenoso", "Franco"],
+        "erosion_protection": "Muito Alta (ramas cobrem todo o solo)"
+      },
+      "angola_calendar": {
+        "cycle_days": 130,
+        "planting_months": [10, 11, 12],
+        "harvest_months": [5, 6]
+      },
+      "good_successors": ["milho", "feijao_vulgar"],
+      "pest_risk_if_monoculture": ["Gorgulho-da-batata-doce"]
+    }
+  ]
+}
+

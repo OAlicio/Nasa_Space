@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Field Shift | Angola</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar"><div class="brand"><span class="brand-mark">FS</span><span>FIELD SHIFT</span></div><div class="live"><span></span> NASA EARTH OBSERVATION LAB</div></header>
+      <section class="hero"><div><p class="eyebrow">Angola · apoio à decisão agrícola</p><h1>Conheça o campo.<br /><em>Escolha a rotação.</em></h1><p class="intro">Compare a prática atual com duas alternativas, usando padrões observados pela NASA e o conhecimento de quem trabalha a terra.</p></div><div class="hero-orbit" aria-hidden="true"><div class="orbit-ring"></div><div class="orbit-core">FIELD<br /><strong>SHIFT</strong></div></div></section>
+      <nav class="steps" aria-label="Etapas da análise"><span class="active">01 Campo</span><span>02 Situação</span><span>03 Objetivo</span><span>04 Resultado</span></nav>
+      <form id="analysis-form" class="intake">
+        <section class="form-section"><div><p class="eyebrow">01 · localização</p><h2>Onde fica o terreno?</h2><p class="helper">A chuva e a temperatura vêm de uma célula de cerca de 50 km. A vegetação, quando disponível, é calculada sobre o terreno.</p></div><div class="field-grid"><label>Latitude <input id="latitude" name="latitude" type="number" step="0.01" value="-8.84" required /></label><label>Longitude <input id="longitude" name="longitude" type="number" step="0.01" value="13.23" required /></label><label>Área aproximada (ha) <input name="areaHa" type="number" min="0.1" step="0.1" value="1.2" /></label></div></section>
+        <section class="form-section"><div><p class="eyebrow">02 · situação atual</p><h2>O que está a acontecer no solo?</h2></div><div class="field-grid"><label>Cultura atual <select name="currentCrop"><option value="">Nada plantado agora</option><option value="milho">Milho</option><option value="feijao_macunde">Feijão-macunde</option><option value="mandioca">Mandioca</option><option value="ginguba">Ginguba</option></select></label><label>Se não, costuma plantar <select name="usualCrop"><option value="">Não sei</option><option value="milho">Milho</option><option value="feijao_macunde">Feijão-macunde</option><option value="mandioca">Mandioca</option><option value="ginguba">Ginguba</option></select></label><label>Acesso a rega <select name="irrigation"><option value="false">Não</option><option value="true">Sim</option></select></label><label>Tipo de solo <select name="soil"><option>Franco-arenoso</option><option>Franco</option><option>Franco-argiloso</option><option>Arenoso</option><option>Argiloso</option></select></label></div></section>
+        <section class="form-section"><div><p class="eyebrow">03 · objetivo</p><h2>O que quer melhorar?</h2></div><div class="field-grid"><label>Objetivo principal <select name="primaryGoal"><option value="saude_solo">Saúde do solo</option><option value="agua">Gastar menos água</option><option value="erosao">Reduzir erosão</option><option value="rendimento">Aumentar rendimento</option></select></label><label>Objetivo secundário <select name="secondaryGoal"><option value="">Nenhum</option><option value="agua">Gastar menos água</option><option value="erosao">Reduzir erosão</option><option value="rendimento">Aumentar rendimento</option></select></label><label>Épocas a planear <select name="seasons"><option value="1">1 época</option><option value="2" selected>2 épocas</option><option value="3">3 épocas</option></select></label></div><button class="primary" type="submit">Analisar o terreno <span>↗</span></button></section>
+      </form>
+      <section id="status" class="status" role="status" hidden></section>
+      <main id="results" hidden>
+        <section class="results-intro"><div><p class="eyebrow">04 · leitura do campo</p><h2>Três caminhos para comparar</h2><p class="helper">A Estratégia A é a referência. As outras duas respondem ao objetivo escolhido. Isto descreve padrões históricos, não prevê o tempo.</p></div><button id="new-analysis" class="secondary" type="button">Nova análise</button></section>
+        <section class="metrics" id="metrics"></section>
+        <section class="indicators"><div class="section-heading"><div><p class="eyebrow">Sinais observados</p><h2>Condições do local</h2></div><span id="period" class="source-tag"></span></div><div id="indicator-grid" class="indicator-grid"></div></section>
+        <section class="recommendation-layout"><div class="section-heading"><div><p class="eyebrow">Comparação</p><h2>Estratégias de rotação</h2></div><span class="source-tag">A · B · C</span></div><div id="recommendations" class="recommendations"></div></section>
+        <section class="premises"><div class="section-heading"><div><p class="eyebrow">Revisão local</p><h2>Premissas a validar</h2></div><span class="source-tag">EDITÁVEIS</span></div><div id="premise-list"></div><button id="recalculate" class="primary" type="button">Recalcular pontuações <span>↻</span></button></section>
+        <p id="limitations" class="limitations"></p>
+      </main>
+      <footer><span>Fontes: NASA POWER · catálogo Field Shift</span><span>Validar decisões com agricultor ou técnico local</span></footer>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
