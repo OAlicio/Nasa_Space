@@ -20,8 +20,10 @@ Crie a base e um utilizador local:
 
 ```bash
 sudo -u postgres createuser --createdb field_shift
+sudo -u postgres psql -c "ALTER USER field_shift WITH PASSWORD 'change-me';"
 sudo -u postgres createdb --owner=field_shift field_shift
-export DATABASE_URL=postgresql://field_shift@localhost:5432/field_shift
+cp .env.example .env
+# Edite .env e troque change-me por uma password real.
 ```
 
 Instale as dependências e carregue o catálogo:

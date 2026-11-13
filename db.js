@@ -1,16 +1,34 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
+require('dotenv/config');
 const { Pool } = require('pg');
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+function databaseUrl() {
+  const value = process.env.DATABASE_URL;
+  if (typeof value !== 'string' || !value.trim()) {
+    throw new Error('DATABASE_URL não está configurada. Copie .env.example para .env e informe a ligação PostgreSQL.');
+  }
+  let parsed;
+  try { parsed = new URL(value); } catch { throw new Error('DATABASE_URL não é uma URL PostgreSQL válida.'); }
+  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) throw new Error('DATABASE_URL deve usar o protocolo postgres:// ou postgresql://.');
+  if (!parsed.password && !process.env.PGPASSWORD) throw new Error('A ligação PostgreSQL não tem password. Defina a password na DATABASE_URL ou em PGPASSWORD.');
+  return value;
+}
+
+let pool;
+
+function getPool() {
+  if (!pool) pool = new Pool({ connectionString: databaseUrl(), password: process.env.PGPASSWORD });
+  return pool;
+}
 const schemaPath = path.join(__dirname, 'db', 'schema.sql');
 
 async function migrate() {
-  await pool.query(await fs.readFile(schemaPath, 'utf8'));
+  await getPool().query(await fs.readFile(schemaPath, 'utf8'));
 }
 
 async function listPlants() {
-  const { rows } = await pool.query(`
+  const { rows } = await getPool().query(`
     SELECT id, name_pt, scientific_name, botanical_family, role_in_rotation,
       nitrogen_impact, nitrogen_fixation_kg_ha, climate_requirements,
       soil_requirements, angola_calendar, good_successors,
@@ -24,7 +42,7 @@ async function listPlants() {
 }
 
 async function upsertPlant(crop, faostatItem, faostatStats = {}) {
-  await pool.query(`
+  await getPool().query(`
     INSERT INTO plants (
       id, name_pt, scientific_name, botanical_family, role_in_rotation,
       nitrogen_impact, nitrogen_fixation_kg_ha, climate_requirements,
@@ -55,6 +73,6 @@ async function upsertPlant(crop, faostatItem, faostatStats = {}) {
   ]);
 }
 
-async function close() { await pool.end(); }
+async function close() { if (pool) await pool.end(); }
 
-module.exports = { close, listPlants, migrate, pool, upsertPlant };
+module.exports = { close, listPlants, migrate, upsertPlant };
