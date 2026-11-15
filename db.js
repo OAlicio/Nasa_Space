@@ -10,12 +10,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function databaseUrl() {
   const value = process.env.DATABASE_URL;
   if (typeof value !== 'string' || !value.trim()) {
-    throw new Error('DATABASE_URL não está configurada. Copie .env.example para .env e informe a ligação PostgreSQL.');
+    throw new Error('DATABASE_URL is not configured. Copy .env.example to .env and configure the PostgreSQL connection.');
   }
   let parsed;
-  try { parsed = new URL(value); } catch { throw new Error('DATABASE_URL não é uma URL PostgreSQL válida.'); }
-  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) throw new Error('DATABASE_URL deve usar o protocolo postgres:// ou postgresql://.');
-  if (!parsed.password && !process.env.PGPASSWORD) throw new Error('A ligação PostgreSQL não tem password. Defina a password na DATABASE_URL ou em PGPASSWORD.');
+  try { parsed = new URL(value); } catch { throw new Error('DATABASE_URL is not a valid PostgreSQL URL.'); }
+  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) throw new Error('DATABASE_URL must use postgres:// or postgresql:// protocol.');
+  if (!parsed.password && !process.env.PGPASSWORD) throw new Error('PostgreSQL connection has no password. Set password in DATABASE_URL or PGPASSWORD.');
   return value;
 }
 

@@ -279,8 +279,8 @@ Recebe os dados do terreno e preferências do agricultor, consulta a API da **NA
     "resolucoes": "Chuva e humidade do solo: célula de cerca de 50 km. Vegetação: 250 m.",
     "datas_dados": "NASA POWER (últimos 30 dias)",
     "avisos": [
-      "Esta ferramenta apoia a decisão do agricultor e não substitui assistência agronómica local.",
-      "Não constitui previsão meteorológica."
+      "This tool supports the farmer's decision and does not replace local agronomic assistance.",
+      "Does not constitute a weather forecast."
     ]
   }
 }
@@ -302,7 +302,7 @@ Devolve o mesmo objeto JSON descrito em `POST /api/analises`.
   "estado": "erro",
   "erro": {
     "codigo": "analise_nao_encontrada",
-    "mensagem": "Análise não encontrada."
+    "mensagem": "Analysis not found."
   }
 }
 ```

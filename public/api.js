@@ -1,7 +1,7 @@
 async function request(url, options) {
   const response = await fetch(url, options);
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || 'Não foi possível concluir o pedido.');
+  if (!response.ok) throw new Error(data.error || data.erro?.mensagem || data.message || 'Could not complete the request.');
   return data;
 }
 

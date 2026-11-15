@@ -12,7 +12,7 @@ let plants = { crops: [] };
 const analysisCache = new Map();
 const powerCache = new Map();
 
-// Ativar CORS para permitir pedidos do frontend (ex: Next.js em http://localhost:3000)
+// Enable CORS to allow requests from the frontend (e.g., Next.js at http://localhost:3000)
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
@@ -51,7 +51,7 @@ function normaliseRequest(body = {}) {
   const longitude = numberInRange(body.longitude, 11.6, 24.1, 13.23);
   const seasons = Math.round(numberInRange(body.num_epocas ?? body.seasons, 1, 3, 2));
 
-  // Suporte a diferentes formatos do frontend (objeto ou id ou string)
+  // Support different frontend formats (object, id, or string)
   let currentCropName = '';
   let currentPlantingDate = '';
   if (body.cultura_atual && typeof body.cultura_atual === 'object') {
@@ -67,14 +67,14 @@ function normaliseRequest(body = {}) {
   const usualCrop = body.cultura_habitual ?? body.usualCrop ?? 'Não sei';
   const hasIrrigation = body.rega === true || body.irrigation === true || body.irrigation === 'true' || body.irrigation === 'Sim';
 
-  // Solo: normalizar para arenoso, franco, argiloso ou nao_sei
+  // Soil: normalize to arenoso, franco, argiloso, or nao_sei
   const rawSoil = (body.tipo_solo || body.soil || 'franco').toLowerCase();
   let soilType = 'franco';
   if (rawSoil.includes('arenoso')) soilType = 'arenoso';
   else if (rawSoil.includes('argiloso')) soilType = 'argiloso';
   else if (rawSoil.includes('nao_sei') || rawSoil === 'não sei') soilType = 'nao_sei';
 
-  // Objetivo: normalizar formatos do frontend
+  // Goal: normalize frontend formats
   const rawGoal = body.objetivo_principal || body.primaryGoal || 'saude_solo';
   const goalMap = {
     economizar_agua: 'agua',
@@ -117,11 +117,11 @@ function buildRecommendation(climate, crop) {
   const droughtBonus = crop.climate_requirements.drought_tolerance.includes('Alta') ? 12 : 0;
   const score = Math.round(Math.min(100, 42 + (tempFit ? 30 : 8) + (waterFit ? 18 : 0) + droughtBonus));
   const reasons = [
-    tempFit ? 'temperatura dentro da faixa ideal' : 'temperatura fora da faixa ideal',
-    waterFit ? 'chuva acumulada cobre a necessidade mínima' : 'pode exigir irrigação suplementar'
+    tempFit ? 'temperature within optimal range' : 'temperature outside optimal range',
+    waterFit ? 'accumulated rainfall meets minimum requirement' : 'may require supplemental irrigation'
   ];
   if (crop.nitrogen_fixation_kg_ha > 0) {
-    reasons.push(`fixa até ${crop.nitrogen_fixation_kg_ha} kg/ha de azoto`);
+    reasons.push(`fixes up to ${crop.nitrogen_fixation_kg_ha} kg/ha of nitrogen`);
   }
   return {
     id: crop.id,
@@ -185,7 +185,7 @@ function buildStrategies(climate, request) {
     const isReference = index === 0;
     const strategyId = String.fromCharCode(65 + index); // "A", "B", "C"
 
-    // Sequência de culturas formatada para o frontend: { epoca: number, cultura: string, em_curso?: boolean }
+    // Crop sequence formatted for the frontend: { epoca: number, cultura: string, em_curso?: boolean }
     const sequencia = [];
     if (request.currentCrop && isReference) {
       sequencia.push({ epoca: 0, cultura: reference.name_pt, em_curso: true });
@@ -226,7 +226,7 @@ function buildStrategies(climate, request) {
       : 'Necessidades hídricas equilibradas com o histórico recente. Confirmar sementes certificadas disponíveis na região.';
 
     return {
-      // Contrato oficial esperado pelo frontend (src/types/analysis.ts)
+      // Official contract expected by the frontend (src/types/analysis.ts)
       id: strategyId,
       nome: strategyName,
       sequencia,
@@ -245,7 +245,7 @@ function buildStrategies(climate, request) {
       riscos: risksText,
       fontes: ['NASA POWER', 'FAOSTAT', 'Catálogo Field Shift'],
 
-      // Propriedades adicionais para retrocompatibilidade com protótipo em public/
+      // Additional properties for backward compatibility with prototype in public/
       label: `Estratégia ${strategyId}`,
       title: strategyName,
       sequence: sequencia.map((s) => s.cultura),
@@ -279,11 +279,11 @@ function buildIndicators(climate) {
       value: Number((base * 30 * (0.65 + ((index * 17) % 70) / 100)).toFixed(1)),
       normal: Number((base * 30 * 1.1).toFixed(1))
     })),
-    wetSeasonStart: 'Outubro (estimativa regional)',
+    wetSeasonStart: 'October (regional estimate)',
     dryPeriods: climate.totalRainfall < 80 ? 3 : 1,
     soilMoisture: climate.averageHumidity,
     bareSoilPeriods: 2,
-    note: 'Séries históricas completas e NDVI MODIS serão ligados ao cache de dados quando o serviço ORNL estiver configurado.'
+    note: 'Complete historical series and MODIS NDVI will be linked to the data cache when the ORNL service is configured.'
   };
 }
 
@@ -362,12 +362,12 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       resolucoes: 'Chuva e humidade do solo: célula de cerca de 50 km. Vegetação: 250 m.',
       datas_dados: `NASA POWER (${climate.period})`,
       avisos: [
-        'Esta ferramenta apoia a decisão do agricultor e não substitui assistência agronómica local.',
-        'Não constitui previsão meteorológica.'
+        'This tool supports the farmer\'s decision and does not replace local agronomic assistance.',
+        'Does not constitute a weather forecast.'
       ]
     },
 
-    // Campos legados para compatibilidade com interface estática
+    // Legacy fields for compatibility with static interface
     version,
     request,
     climate: { ...climate, source },
@@ -379,9 +379,9 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       { key: 'calendar', label: 'Calendário local de plantio', value: 'Referência regional', source: 'Literatura', status: 'por validar' }
     ],
     metadata: {
-      sources: ['NASA POWER', 'Catálogo Field Shift'],
-      resolution: 'POWER: cerca de 50 km; NDVI: não disponível no MVP',
-      limitations: ['Não é previsão meteorológica', 'A chuva representa uma célula aproximada de 50 km']
+      sources: ['NASA POWER', 'Field Shift Catalog'],
+      resolution: 'POWER: approx 50 km; NDVI: not available in MVP',
+      limitations: ['Not a weather forecast', 'Rainfall represents an approximate 50 km cell']
     }
   };
 }
@@ -406,7 +406,7 @@ async function fetchPower(latitude, longitude) {
   });
 
   const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
-  if (!response.ok) throw new Error(`NASA POWER respondeu com estado ${response.status}`);
+  if (!response.ok) throw new Error(`NASA POWER responded with status ${response.status}`);
   const payload = await response.json();
   const values = payload.properties?.parameter || {};
 
@@ -432,10 +432,10 @@ async function fetchPower(latitude, longitude) {
 }
 
 // ---------------------------------------------------------------------------
-// ROTAS DA API
+// API ROUTES
 // ---------------------------------------------------------------------------
 
-// Catálogo de Culturas (suporta /api/culturas e /api/crops)
+// Crop Catalog (supports /api/culturas and /api/crops)
 app.get(['/api/culturas', '/api/crops'], (req, res) => {
   res.json({
     metadata: plants.metadata,
@@ -457,18 +457,22 @@ app.get(['/api/culturas', '/api/crops'], (req, res) => {
   });
 });
 
-// Clima direto da NASA POWER
+// Direct climate from NASA POWER
 app.get('/api/climate', async (req, res) => {
   const latitude = numberInRange(req.query.latitude, -18.5, -4.3, -8.84);
   const longitude = numberInRange(req.query.longitude, 11.6, 24.1, 13.23);
   try {
     res.json(await fetchPower(latitude, longitude));
   } catch (error) {
-    res.status(502).json({ error: 'Não foi possível consultar a NASA POWER agora.', detail: error.message });
+    res.status(502).json({
+      error: 'Could not query NASA POWER at this time.',
+      message: 'Could not query NASA POWER at this time.',
+      detail: error.message
+    });
   }
 });
 
-// Recomendações diretas por cultura
+// Direct recommendations by crop
 app.get('/api/recommendations', async (req, res) => {
   const latitude = numberInRange(req.query.latitude, -18.5, -4.3, -8.84);
   const longitude = numberInRange(req.query.longitude, 11.6, 24.1, 13.23);
@@ -477,11 +481,15 @@ app.get('/api/recommendations', async (req, res) => {
     const recommendations = plants.crops.map((crop) => buildRecommendation(climate, crop)).sort((a, b) => b.score - a.score);
     res.json({ climate, recommendations });
   } catch (error) {
-    res.status(502).json({ error: 'Não foi possível gerar recomendações com os dados NASA.', detail: error.message });
+    res.status(502).json({
+      error: 'Could not generate recommendations with NASA data.',
+      message: 'Could not generate recommendations with NASA data.',
+      detail: error.message
+    });
   }
 });
 
-// Criar Análise (suporta /api/analises e /api/analyses)
+// Create Analysis (supports /api/analises and /api/analyses)
 app.post(['/api/analises', '/api/analyses'], async (req, res) => {
   const request = normaliseRequest(req.body);
   try {
@@ -494,14 +502,17 @@ app.post(['/api/analises', '/api/analyses'], async (req, res) => {
       estado: 'erro',
       erro: {
         codigo: 'nasa_power_erro',
-        mensagem: 'Não foi possível gerar a análise com os dados da NASA.'
+        mensagem: 'Could not generate analysis with NASA data.',
+        message: 'Could not generate analysis with NASA data.'
       },
+      error: 'Could not generate analysis with NASA data.',
+      message: 'Could not generate analysis with NASA data.',
       detail: error.message
     });
   }
 });
 
-// Consultar Análise (suporta /api/analises/:id e /api/analyses/:id)
+// Get Analysis (supports /api/analises/:id and /api/analyses/:id)
 app.get(['/api/analises/:id', '/api/analyses/:id'], (req, res) => {
   const analysis = analysisCache.get(req.params.id);
   if (!analysis) {
@@ -509,14 +520,17 @@ app.get(['/api/analises/:id', '/api/analyses/:id'], (req, res) => {
       estado: 'erro',
       erro: {
         codigo: 'analise_nao_encontrada',
-        mensagem: 'Análise não encontrada.'
-      }
+        mensagem: 'Analysis not found.',
+        message: 'Analysis not found.'
+      },
+      error: 'Analysis not found.',
+      message: 'Analysis not found.'
     });
   }
   res.json(analysis);
 });
 
-// Atualizar Premissas e Recalcular (suporta /api/analises/:id/premissas e /api/analyses/:id/premises)
+// Update Premises and Recalculate (supports /api/analises/:id/premissas and /api/analyses/:id/premises)
 app.patch(['/api/analises/:id/premissas', '/api/analyses/:id/premises'], (req, res) => {
   const analysis = analysisCache.get(req.params.id);
   if (!analysis) {
@@ -524,12 +538,15 @@ app.patch(['/api/analises/:id/premissas', '/api/analyses/:id/premises'], (req, r
       estado: 'erro',
       erro: {
         codigo: 'analise_nao_encontrada',
-        mensagem: 'Análise não encontrada.'
-      }
+        mensagem: 'Analysis not found.',
+        message: 'Analysis not found.'
+      },
+      error: 'Analysis not found.',
+      message: 'Analysis not found.'
     });
   }
 
-  // Atualizar valores do request a partir do corpo enviado
+  // Update request values from submitted body
   const updatedRequest = { ...analysis.request };
 
   if (req.body.tipo_solo) {
@@ -551,12 +568,12 @@ app.patch(['/api/analises/:id/premissas', '/api/analyses/:id/premises'], (req, r
     updatedRequest.rega = updatedRequest.irrigation === 'Sim';
   }
 
-  // Recalcular com a versão incrementada mantendo o mesmo id
+  // Recalculate with incremented version keeping the same id
   const nextVersion = (analysis.versao_analise || analysis.version || 1) + 1;
   const updated = buildAnalysis(analysis.climate, updatedRequest, analysis.climate.source, nextVersion);
   updated.id = analysis.id;
 
-  // Atualizar estado das premissas validadas
+  // Update state of validated premises
   updated.premissas = updated.premissas.map((premise) => {
     if (premise.id === 'tipo_solo' && updatedRequest.soilType) {
       return { ...premise, valor: updatedRequest.soilType, estado: 'validada' };
@@ -571,22 +588,22 @@ app.patch(['/api/analises/:id/premissas', '/api/analyses/:id/premises'], (req, r
   res.json(updated);
 });
 
-// Fallback para o frontend estático legado em public/
+// Fallback for legacy static frontend in public/
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 async function start() {
   if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL não está configurada. Consulte o README para configurar o PostgreSQL.');
+    throw new Error('DATABASE_URL is not configured. Refer to README to configure PostgreSQL.');
   }
   await migrate();
   plants = await listPlants();
   if (!plants.crops.length) {
-    throw new Error('A tabela plants está vazia. Execute npm run db:seed.');
+    throw new Error('The plants table is empty. Run npm run db:seed.');
   }
   app.listen(port, () => console.log(`Field Shift backend running at http://localhost:${port}`));
 }
 
 start().catch((error) => {
-  console.error(`Não foi possível iniciar o Field Shift: ${error.message}`);
+  console.error(`Could not start Field Shift: ${error.message}`);
   process.exitCode = 1;
 });
