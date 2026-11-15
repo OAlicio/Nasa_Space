@@ -9,7 +9,9 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "db:migrate": "node scripts/migrate.js",
-    "db:seed": "node scripts/seed-faostat.js"
+    "db:seed": "node scripts/seed-faostat.js",
+    "db:seed:gaez": "node scripts/seed-gaez.js",
+    "gaez:import-csv": "node scripts/import-gaez-csv.js"
   },
   "engines": {
     "node": ">=18"

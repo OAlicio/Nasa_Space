@@ -1,0 +1,1383 @@
+{
+  "crop": "brl",
+  "crop_name_en": "Barley",
+  "crop_name_pt": "Cevada",
+  "scientific_name": "Hordeum vulgare",
+  "source": "FAO GAEZ v4 (brl_hy0_High_ENSEMBLE)",
+  "basins": {
+    "Angola, Coast": [
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7183,
+        "water_deficit_or_irrigation_mm": 2,
+        "suitability_km2": {
+          "very_suitable": 6.27,
+          "suitable": 2356.36,
+          "moderately_suitable": 23363.7,
+          "not_suitable": 457758,
+          "total_suitable": 25726.33
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7256,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 50.25,
+          "suitable": 3009.44,
+          "moderately_suitable": 23095.5,
+          "not_suitable": 457758,
+          "total_suitable": 26155.19
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7191,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 5.33,
+          "suitable": 1463.02,
+          "moderately_suitable": 13908.5,
+          "not_suitable": 472582,
+          "total_suitable": 15376.85
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7358,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 52.31,
+          "suitable": 1897.02,
+          "moderately_suitable": 13805.5,
+          "not_suitable": 472582,
+          "total_suitable": 15754.83
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7220,
+        "water_deficit_or_irrigation_mm": 6,
+        "suitability_km2": {
+          "very_suitable": 4.42,
+          "suitable": 1231.52,
+          "moderately_suitable": 15893.3,
+          "not_suitable": 468588,
+          "total_suitable": 17129.24
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7352,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 70.62,
+          "suitable": 1464.5,
+          "moderately_suitable": 16004.5,
+          "not_suitable": 468587,
+          "total_suitable": 17539.62
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7236,
+        "water_deficit_or_irrigation_mm": 2,
+        "suitability_km2": {
+          "very_suitable": 4.87,
+          "suitable": 1895.14,
+          "moderately_suitable": 22990.8,
+          "not_suitable": 459395,
+          "total_suitable": 24890.81
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7521,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 73.99,
+          "suitable": 2171.12,
+          "moderately_suitable": 23049.9,
+          "not_suitable": 459395,
+          "total_suitable": 25295.01
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7066,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 1.63,
+          "suitable": 770.86,
+          "moderately_suitable": 5710.73,
+          "not_suitable": 489178,
+          "total_suitable": 6483.22
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7510,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 49.19,
+          "suitable": 1156.93,
+          "moderately_suitable": 5518.21,
+          "not_suitable": 489178,
+          "total_suitable": 6724.33
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6896,
+        "water_deficit_or_irrigation_mm": 2,
+        "suitability_km2": {
+          "very_suitable": 0.86,
+          "suitable": 394.81,
+          "moderately_suitable": 2761.46,
+          "not_suitable": 494915,
+          "total_suitable": 3157.13
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7301,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 26.59,
+          "suitable": 598.88,
+          "moderately_suitable": 2707.53,
+          "not_suitable": 494915,
+          "total_suitable": 3333
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7247,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 7.4,
+          "suitable": 2353.95,
+          "moderately_suitable": 28020.6,
+          "not_suitable": 451958,
+          "total_suitable": 30381.95
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7475,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 66.97,
+          "suitable": 2747.35,
+          "moderately_suitable": 27983.9,
+          "not_suitable": 451958,
+          "total_suitable": 30798.22
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7110,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 2.93,
+          "suitable": 1166.87,
+          "moderately_suitable": 7723.44,
+          "not_suitable": 484585,
+          "total_suitable": 8893.24
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7267,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 99.55,
+          "suitable": 1619.1,
+          "moderately_suitable": 7570.1,
+          "not_suitable": 484585,
+          "total_suitable": 9288.75
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6989,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 0.85,
+          "suitable": 393.73,
+          "moderately_suitable": 1608.96,
+          "not_suitable": 497289,
+          "total_suitable": 2003.54
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7140,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 51.65,
+          "suitable": 590.46,
+          "moderately_suitable": 1533.63,
+          "not_suitable": 497289,
+          "total_suitable": 2175.74
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7277,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 4.7,
+          "suitable": 1722.56,
+          "moderately_suitable": 16959.9,
+          "not_suitable": 467199,
+          "total_suitable": 18687.16
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7480,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 63.5,
+          "suitable": 2306.81,
+          "moderately_suitable": 16943.3,
+          "not_suitable": 467199,
+          "total_suitable": 19313.61
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7021,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 0.93,
+          "suitable": 367.74,
+          "moderately_suitable": 1528.66,
+          "not_suitable": 496995,
+          "total_suitable": 1897.33
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7204,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 53.85,
+          "suitable": 473.6,
+          "moderately_suitable": 1534.95,
+          "not_suitable": 496995,
+          "total_suitable": 2062.39
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 5553,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 0,
+          "suitable": 57.75,
+          "moderately_suitable": 323.83,
+          "not_suitable": 501200,
+          "total_suitable": 381.59
+        }
+      },
+      {
+        "basin_id": "7023",
+        "basin_name": "Angola, Coast",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7329,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 15.2,
+          "suitable": 149.05,
+          "moderately_suitable": 285.46,
+          "not_suitable": 501200,
+          "total_suitable": 449.72
+        }
+      }
+    ],
+    "Congo": [
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6835,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 3.28,
+          "suitable": 1426.81,
+          "moderately_suitable": 7276.43,
+          "not_suitable": 3701250,
+          "total_suitable": 8706.52
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7034,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 16.92,
+          "suitable": 1731.61,
+          "moderately_suitable": 7398.24,
+          "not_suitable": 3701250,
+          "total_suitable": 9146.77
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6854,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 0.4,
+          "suitable": 1075.22,
+          "moderately_suitable": 5472.43,
+          "not_suitable": 3705160,
+          "total_suitable": 6548.05
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7012,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 13.05,
+          "suitable": 1445.71,
+          "moderately_suitable": 5601.74,
+          "not_suitable": 3705160,
+          "total_suitable": 7060.5
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6848,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 3.64,
+          "suitable": 1134.31,
+          "moderately_suitable": 5931.2,
+          "not_suitable": 3704590,
+          "total_suitable": 7069.15
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 6930,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 15.74,
+          "suitable": 1439.34,
+          "moderately_suitable": 5983.66,
+          "not_suitable": 3704590,
+          "total_suitable": 7438.74
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6836,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 2.46,
+          "suitable": 1300.86,
+          "moderately_suitable": 7479.97,
+          "not_suitable": 3700220,
+          "total_suitable": 8783.29
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7119,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 17.58,
+          "suitable": 1646.86,
+          "moderately_suitable": 7582.99,
+          "not_suitable": 3700220,
+          "total_suitable": 9247.43
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6662,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 0.01,
+          "suitable": 550.45,
+          "moderately_suitable": 3858.5,
+          "not_suitable": 3708830,
+          "total_suitable": 4408.96
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7171,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 2.28,
+          "suitable": 886.16,
+          "moderately_suitable": 3986.97,
+          "not_suitable": 3708830,
+          "total_suitable": 4875.41
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6560,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 0,
+          "suitable": 288.98,
+          "moderately_suitable": 2879.99,
+          "not_suitable": 3711230,
+          "total_suitable": 3168.97
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 6964,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 0.86,
+          "suitable": 614.54,
+          "moderately_suitable": 3076.47,
+          "not_suitable": 3711230,
+          "total_suitable": 3691.87
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6767,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 11.19,
+          "suitable": 1376.66,
+          "moderately_suitable": 8527.55,
+          "not_suitable": 3697930,
+          "total_suitable": 9915.4
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 6962,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 29.63,
+          "suitable": 1706.31,
+          "moderately_suitable": 8585.34,
+          "not_suitable": 3697930,
+          "total_suitable": 10321.28
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6629,
+        "water_deficit_or_irrigation_mm": 8,
+        "suitability_km2": {
+          "very_suitable": 0.05,
+          "suitable": 483.82,
+          "moderately_suitable": 4005.95,
+          "not_suitable": 3707890,
+          "total_suitable": 4489.82
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7118,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 2.59,
+          "suitable": 915.56,
+          "moderately_suitable": 4160.74,
+          "not_suitable": 3707890,
+          "total_suitable": 5078.89
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6544,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 0,
+          "suitable": 185.65,
+          "moderately_suitable": 2347.34,
+          "not_suitable": 3712810,
+          "total_suitable": 2533
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7554,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 0.85,
+          "suitable": 541.18,
+          "moderately_suitable": 2540.95,
+          "not_suitable": 3712810,
+          "total_suitable": 3082.98
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 6826,
+        "water_deficit_or_irrigation_mm": 3,
+        "suitability_km2": {
+          "very_suitable": 2.2,
+          "suitable": 1060.25,
+          "moderately_suitable": 6273.6,
+          "not_suitable": 3702810,
+          "total_suitable": 7336.05
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7070,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 14.51,
+          "suitable": 1367.6,
+          "moderately_suitable": 6382.56,
+          "not_suitable": 3702810,
+          "total_suitable": 7764.67
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 5874,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 0,
+          "suitable": 192.55,
+          "moderately_suitable": 2321.03,
+          "not_suitable": 3713050,
+          "total_suitable": 2513.58
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7106,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 3.01,
+          "suitable": 480.32,
+          "moderately_suitable": 2438.57,
+          "not_suitable": 3713050,
+          "total_suitable": 2921.9
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 5766,
+        "water_deficit_or_irrigation_mm": null,
+        "suitability_km2": {
+          "very_suitable": 0,
+          "suitable": 43.33,
+          "moderately_suitable": 708.82,
+          "not_suitable": 3717950,
+          "total_suitable": 752.15
+        }
+      },
+      {
+        "basin_id": "7005",
+        "basin_name": "Congo",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7190,
+        "water_deficit_or_irrigation_mm": 1,
+        "suitability_km2": {
+          "very_suitable": 1.94,
+          "suitable": 202.75,
+          "moderately_suitable": 830.63,
+          "not_suitable": 3717950,
+          "total_suitable": 1035.32
+        }
+      }
+    ],
+    "Zambezi": [
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7294,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 518.75,
+          "suitable": 5005.5,
+          "moderately_suitable": 10153.4,
+          "not_suitable": 1350100,
+          "total_suitable": 15677.65
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7595,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 726.9,
+          "suitable": 5583.35,
+          "moderately_suitable": 9829.66,
+          "not_suitable": 1350100,
+          "total_suitable": 16139.91
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7404,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 510.27,
+          "suitable": 3387.3,
+          "moderately_suitable": 6220.96,
+          "not_suitable": 1360750,
+          "total_suitable": 10118.53
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7800,
+        "water_deficit_or_irrigation_mm": 8,
+        "suitability_km2": {
+          "very_suitable": 696.18,
+          "suitable": 3676.7,
+          "moderately_suitable": 6186.77,
+          "not_suitable": 1360630,
+          "total_suitable": 10559.65
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7434,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 534.78,
+          "suitable": 3991.93,
+          "moderately_suitable": 7665.91,
+          "not_suitable": 1356840,
+          "total_suitable": 12192.62
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp2p6",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7771,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 712.61,
+          "suitable": 4384.86,
+          "moderately_suitable": 7535.83,
+          "not_suitable": 1356690,
+          "total_suitable": 12633.3
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7409,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 529.23,
+          "suitable": 4229.8,
+          "moderately_suitable": 8983.41,
+          "not_suitable": 1353330,
+          "total_suitable": 13742.44
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7716,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 682.73,
+          "suitable": 4707.78,
+          "moderately_suitable": 8730.84,
+          "not_suitable": 1353330,
+          "total_suitable": 14121.35
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7324,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 374.13,
+          "suitable": 1580.02,
+          "moderately_suitable": 2703.81,
+          "not_suitable": 1371260,
+          "total_suitable": 4657.96
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7964,
+        "water_deficit_or_irrigation_mm": 11,
+        "suitability_km2": {
+          "very_suitable": 621.63,
+          "suitable": 1830.84,
+          "moderately_suitable": 2617.61,
+          "not_suitable": 1371260,
+          "total_suitable": 5070.08
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7368,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 339.02,
+          "suitable": 1229.61,
+          "moderately_suitable": 1968.26,
+          "not_suitable": 1373880,
+          "total_suitable": 3536.89
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp4p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 8064,
+        "water_deficit_or_irrigation_mm": 13,
+        "suitability_km2": {
+          "very_suitable": 594.92,
+          "suitable": 1467.54,
+          "moderately_suitable": 1941.34,
+          "not_suitable": 1373880,
+          "total_suitable": 4003.8
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7402,
+        "water_deficit_or_irrigation_mm": 4,
+        "suitability_km2": {
+          "very_suitable": 548.1,
+          "suitable": 4871.08,
+          "moderately_suitable": 10494.5,
+          "not_suitable": 1349340,
+          "total_suitable": 15913.68
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7691,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 714.95,
+          "suitable": 5335.54,
+          "moderately_suitable": 10257,
+          "not_suitable": 1349340,
+          "total_suitable": 16307.49
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7277,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 376.96,
+          "suitable": 1846.22,
+          "moderately_suitable": 3234.37,
+          "not_suitable": 1369450,
+          "total_suitable": 5457.55
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7896,
+        "water_deficit_or_irrigation_mm": 11,
+        "suitability_km2": {
+          "very_suitable": 635,
+          "suitable": 2216.18,
+          "moderately_suitable": 3147.99,
+          "not_suitable": 1369450,
+          "total_suitable": 5999.17
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7279,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 269.96,
+          "suitable": 986.02,
+          "moderately_suitable": 1651.03,
+          "not_suitable": 1374980,
+          "total_suitable": 2907
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp6p0",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 8330,
+        "water_deficit_or_irrigation_mm": 14,
+        "suitability_km2": {
+          "very_suitable": 545.41,
+          "suitable": 1280.35,
+          "moderately_suitable": 1600.86,
+          "not_suitable": 1374980,
+          "total_suitable": 3426.62
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7382,
+        "water_deficit_or_irrigation_mm": 5,
+        "suitability_km2": {
+          "very_suitable": 495.89,
+          "suitable": 3771.27,
+          "moderately_suitable": 8019.97,
+          "not_suitable": 1355590,
+          "total_suitable": 12287.13
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2020s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 7729,
+        "water_deficit_or_irrigation_mm": 8,
+        "suitability_km2": {
+          "very_suitable": 660.62,
+          "suitable": 4223.82,
+          "moderately_suitable": 7755.45,
+          "not_suitable": 1355590,
+          "total_suitable": 12639.89
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7193,
+        "water_deficit_or_irrigation_mm": 7,
+        "suitability_km2": {
+          "very_suitable": 298.33,
+          "suitable": 1108.52,
+          "moderately_suitable": 1820.49,
+          "not_suitable": 1374460,
+          "total_suitable": 3227.35
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2050s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 8075,
+        "water_deficit_or_irrigation_mm": 13,
+        "suitability_km2": {
+          "very_suitable": 561.92,
+          "suitable": 1359.69,
+          "moderately_suitable": 1788.87,
+          "not_suitable": 1374460,
+          "total_suitable": 3710.48
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": false,
+        "ymax_kg_ha": 7220,
+        "water_deficit_or_irrigation_mm": 13,
+        "suitability_km2": {
+          "very_suitable": 190.75,
+          "suitable": 615.36,
+          "moderately_suitable": 1078.52,
+          "not_suitable": 1377580,
+          "total_suitable": 1884.63
+        }
+      },
+      {
+        "basin_id": "7006",
+        "basin_name": "Zambezi",
+        "crop": "brl",
+        "climate_model": "ENSEMBLE",
+        "rcp": "rcp8p5",
+        "horizon": "2080s",
+        "water_supply": "rainfed",
+        "co2_fertilization": true,
+        "ymax_kg_ha": 8848,
+        "water_deficit_or_irrigation_mm": 17,
+        "suitability_km2": {
+          "very_suitable": 370.62,
+          "suitable": 880.9,
+          "moderately_suitable": 990.53,
+          "not_suitable": 1377580,
+          "total_suitable": 2242.05
+        }
+      }
+    ]
+  }
+}

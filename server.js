@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { listPlants, migrate } from './db.js';
+import { listPlants, listGaezCrops, migrate } from './db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -452,9 +452,20 @@ app.get(['/api/culturas', '/api/crops'], (req, res) => {
       soil_requirements: crop.soil_requirements,
       angola_calendar: crop.angola_calendar,
       good_successors: crop.good_successors,
-      faostat_stats: crop.faostat_stats
+      faostat_stats: crop.faostat_stats,
+      gaez_code: crop.gaez_code,
+      gaez_stats: crop.gaez_stats
     }))
   });
+});
+
+// Catálogo GAEZ v4 (todas as 51 culturas)
+app.get('/api/gaez/crops', async (req, res) => {
+  try {
+    res.json(await listGaezCrops());
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao consultar catálogo GAEZ', detail: error.message });
+  }
 });
 
 // Direct climate from NASA POWER
