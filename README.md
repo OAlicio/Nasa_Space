@@ -1,30 +1,30 @@
 # Field Shift — Backend
 
-Serviço de backend em **Node.js (Express)** com **PostgreSQL** para o projeto **Field Shift** (NASA Space Apps Challenge 2026, Desafio 7).
+Backend service in **Node.js (Express)** with **PostgreSQL** for the **Field Shift** project (NASA Space Apps Challenge 2026, Challenge 7).
 
-Disponibiliza uma API REST com suporte a CORS para o frontend, integrando dados climáticos em tempo real da **NASA POWER** e um catálogo de culturas para Angola enriquecido com dados da **FAO / FAOSTAT**.
+Provides a REST API with CORS support for the frontend, integrating near-real-time climate data from **NASA POWER** and a crop catalog for Angola enriched with data from the **FAO / FAOSTAT**.
 
-> 🌐 **Repositório do Frontend:**  
-> A interface web da aplicação (desenvolvida em Next.js, Leaflet e Tailwind CSS) encontra-se disponível em:  
+> 🌐 **Frontend Repository:**  
+> The web application interface (built with Next.js, Leaflet, and Tailwind CSS) is available at:  
 > **[https://github.com/jormaedes/field_shift_frontend](https://github.com/jormaedes/field_shift_frontend)**
 
 ---
 
-## 1. Configuração e Instalação
+## 1. Setup and Installation
 
-### Requisitos
-* Node.js >= 18 (o projeto utiliza **ES Modules** — `"type": "module"`)
-* PostgreSQL 14+ (Local ou em nuvem com [Neon](https://neon.tech))
+### Requirements
+* Node.js >= 18 (the project uses **ES Modules** — `"type": "module"`)
+* PostgreSQL 14+ (Local or cloud-hosted with [Neon](https://neon.tech))
 
-### Opção A: PostgreSQL na Nuvem (Neon)
-Se estiver a utilizar uma base de dados gerenciada no **Neon**:
-1. Obtenha a connection string no painel do Neon (com `sslmode=require`).
-2. Defina-a no ficheiro `.env`:
+### Option A: Cloud PostgreSQL (Neon)
+If you are using a managed database on **Neon**:
+1. Copy the connection string from your Neon dashboard (with `sslmode=require`).
+2. Add it to your `.env` file:
 ```env
-DATABASE_URL="postgresql://neondb_owner:SENHA@ep-xyz.neon.tech/neondb?sslmode=require"
+DATABASE_URL="postgresql://neondb_owner:PASSWORD@ep-xyz.neon.tech/neondb?sslmode=require"
 PORT=4000
 ```
-3. Execute as migrações e o povoamento:
+3. Run migrations and database seeding:
 ```bash
 npm run db:migrate
 npm run db:seed
@@ -32,25 +32,25 @@ npm run db:seed
 
 ---
 
-### Opção B: PostgreSQL Local (Debian/Ubuntu)
+### Option B: Local PostgreSQL (Debian/Ubuntu)
 ```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
 sudo systemctl enable --now postgresql
 ```
 
-Crie a base de dados e o utilizador local:
+Create the local database and user:
 ```bash
 sudo -u postgres createuser --createdb field_shift
 sudo -u postgres psql -c "ALTER USER field_shift WITH PASSWORD 'change-me';"
 sudo -u postgres createdb --owner=field_shift field_shift
 ```
 
-Copie o ficheiro `.env.example` para `.env` e configure:
+Copy the `.env.example` file to `.env` and configure:
 ```bash
 cp .env.example .env
 ```
-Exemplo de `.env`:
+Example `.env`:
 ```env
 DATABASE_URL="postgresql://field_shift:change-me@localhost:5432/field_shift"
 PORT=4000
@@ -58,31 +58,31 @@ PORT=4000
 
 ---
 
-### Execução dos Comandos
+### Available Scripts
 
 ```bash
-# Instalar dependências
+# Install dependencies
 npm install
 
-# Criar as tabelas no PostgreSQL (local ou Neon)
+# Run database migrations (local or Neon)
 npm run db:migrate
 
-# Povoar catálogo de culturas e estatísticas FAOSTAT
+# Seed crop catalog and FAOSTAT statistics
 npm run db:seed
 
-# Iniciar o servidor em modo de desenvolvimento (watch mode)
+# Start development server (watch mode)
 npm run dev
 
-# Ou em modo de produção
+# Or start in production mode
 npm start
 ```
 
 ---
 
-## 2. Documentação da API REST
+## 2. REST API Documentation
 
-* **Base URL:** `http://localhost:4000` (ou a porta configurada em `PORT`)
-* **CORS:** Ativo para qualquer origem (`*`) para ligação ao frontend (ex.: Next.js em `http://localhost:3000`).
+* **Base URL:** `http://localhost:4000` (or configured `PORT`)
+* **CORS:** Enabled for any origin (`*`) to connect with frontend applications (e.g. Next.js on `http://localhost:3000`).
 * **Content-Type:** `application/json`
 
 ---
@@ -90,9 +90,9 @@ npm start
 ### `GET /api/culturas`
 > **Alias:** `GET /api/crops`
 
-Devolve o catálogo de culturas registadas na base de dados para seleção no formulário de entrada.
+Returns the crop catalog registered in the database for selection in the form.
 
-#### Resposta (`200 OK`)
+#### Response (`200 OK`)
 ```json
 {
   "metadata": {
@@ -140,9 +140,9 @@ Devolve o catálogo de culturas registadas na base de dados para seleção no fo
 ### `POST /api/analises`
 > **Alias:** `POST /api/analyses`
 
-Recebe os dados do terreno e preferências do agricultor, consulta a API da **NASA POWER** para as coordenadas indicadas e calcula as estratégias de rotação de culturas (A = referência, B e C = alternativas).
+Receives plot information and farmer preferences, queries the **NASA POWER** API for the specified coordinates, and calculates crop rotation strategies (A = reference, B & C = alternatives).
 
-#### Corpo do Pedido (`Request Body`)
+#### Request Body
 ```json
 {
   "latitude": -12.78,
@@ -162,11 +162,11 @@ Recebe os dados do terreno e preferências do agricultor, consulta a API da **NA
 }
 ```
 
-* **Opções de `tipo_solo`:** `"arenoso"`, `"franco"`, `"argiloso"`, `"nao_sei"`.
-* **Opções de `objetivo_principal` / `objetivo_secundario`:** `"saude_solo"`, `"economizar_agua"`, `"reduzir_erosao"`, `"aumentar_rendimento"`.
-* **`cultura_atual`:** Pode ser `null` se não houver cultura plantada, ou `{ "nome": "milho", "data_plantio": "..." }`.
+* **`tipo_solo` options:** `"arenoso"` (sandy), `"franco"` (loam), `"argiloso"` (clay), `"nao_sei"` (unknown).
+* **`objetivo_principal` / `objetivo_secundario` options:** `"saude_solo"` (soil health), `"economizar_agua"` (water conservation), `"reduzir_erosao"` (erosion reduction), `"aumentar_rendimento"` (yield increase).
+* **`cultura_atual`:** Can be `null` when no crop is currently planted, or `{ "nome": "milho", "data_plantio": "..." }`.
 
-#### Resposta (`201 Created`)
+#### Response (`201 Created`)
 ```json
 {
   "id": "1794741115749-ff9nn6",
@@ -229,7 +229,8 @@ Recebe os dados do terreno e preferências do agricultor, consulta a API da **NA
       "pontuacao": 87,
       "pontuacao_por_criterio": { "agua": 0.45, "solo": 1, "erosao": 0.95, "mercado": 0.65 },
       "confianca": "alta",
-      "porque": "Combina Batata-doce com culturas de família botânica distinta e fixadora de azoto para quebrar ciclos de pragas e regenerar a terra.","evidencia": "NASA POWER: 105.8 mm de precipitação acumulada nos últimos 30 dias. Ciclo agronómico da cultura: 130 dias. Objetivo: saude solo.",
+      "porque": "Combina Batata-doce com culturas de família botânica distinta e fixadora de azoto para quebrar ciclos de pragas e regenerar a terra.",
+      "evidencia": "NASA POWER: 105.8 mm de precipitação acumulada nos últimos 30 dias. Ciclo agronómico da cultura: 130 dias. Objetivo: saude solo.",
       "beneficios": "Cobertura de Solo / Quebra de Pragas. Potencial de fixação biológica de até 0 kg/ha de azoto no solo.",
       "lacunas": "Tipo de solo indicado pelo agricultor sem análise físico-química de laboratório. Calendário exato a calibrar localmente.",
       "riscos": "Precipitação recente abaixo da necessidade ideal da cultura; pode requerer rega suplementar. Confirmar sementes e pragas locais.",
@@ -312,12 +313,12 @@ Recebe os dados do terreno e preferências do agricultor, consulta a API da **NA
 ### `GET /api/analises/:id`
 > **Alias:** `GET /api/analyses/:id`
 
-Consulta os resultados de uma análise criada anteriormente pelo seu identificador único.
+Retrieves the results of a previously created analysis by its unique ID.
 
-#### Resposta (`200 OK`)
-Devolve o mesmo objeto JSON descrito em `POST /api/analises`.
+#### Response (`200 OK`)
+Returns the same JSON object described in `POST /api/analises`.
 
-#### Resposta de Erro (`404 Not Found`)
+#### Error Response (`404 Not Found`)
 ```json
 {
   "estado": "erro",
@@ -333,9 +334,9 @@ Devolve o mesmo objeto JSON descrito em `POST /api/analises`.
 ### `PATCH /api/analises/:id/premissas`
 > **Alias:** `PATCH /api/analyses/:id/premises`
 
-Atualiza as premissas indicadas pelo agricultor (ex.: correção do tipo de solo ou acesso a rega) e recalcula as pontuações e estratégias de rotação. Utiliza os dados climáticos em memória (cache), sem fazer novas consultas à NASA.
+Updates premises specified by the farmer (e.g. correcting soil type or irrigation access) and recalculates rotation scores and strategies. Uses in-memory cached climate data without performing new requests to NASA.
 
-#### Corpo do Pedido (`Request Body`)
+#### Request Body
 ```json
 {
   "tipo_solo": "argiloso",
@@ -343,24 +344,24 @@ Atualiza as premissas indicadas pelo agricultor (ex.: correção do tipo de solo
 }
 ```
 
-#### Resposta (`200 OK`)
-Devolve a análise recalculada com:
-* `versao_analise` incrementada (ex.: de `1` para `2`);
-* As premissas atualizadas com `estado: "validada"`;
-* Novas pontuações e ordem de estratégias calculadas com base nas premissas corrigidas.
+#### Response (`200 OK`)
+Returns the recalculated analysis with:
+* Incremented `versao_analise` (e.g., from `1` to `2`);
+* Updated premises with `estado: "validada"`;
+* Recalculated scores and strategy ranking based on the adjusted premises.
 
 ---
 
-### Endpoints Utilitários Adicionais
+### Additional Utility Endpoints
 
 #### `GET /api/climate?latitude=-12.78&longitude=15.74`
-Devolve diretamente o resumo climático observado da NASA POWER (precipitação acumulada, temperatura média, humidade média e radiação solar) para as coordenadas fornecidas.
+Returns the direct observed climate summary from NASA POWER (accumulated precipitation, average temperature, relative humidity, and solar radiation) for the provided coordinates.
 
 #### `GET /api/recommendations?latitude=-12.78&longitude=15.74`
-Devolve a lista ordenada de culturas e respetiva pontuação de adequação climática para o ponto indicado.
+Returns the ranked list of crops and their climate suitability score for the specified coordinates.
 
 ---
 
-## 3. Repositórios Relacionados
+## 3. Related Repositories
 
 * **Frontend:** [https://github.com/jormaedes/field_shift_frontend](https://github.com/jormaedes/field_shift_frontend)
