@@ -11,7 +11,8 @@
     "db:migrate": "node scripts/migrate.js",
     "db:seed": "node scripts/seed-faostat.js",
     "db:seed:gaez": "node scripts/seed-gaez.js",
-    "gaez:import-csv": "node scripts/import-gaez-csv.js"
+    "gaez:import-csv": "node scripts/import-gaez-csv.js",
+    "data:translate": "node scripts/translate-to-english.js"
   },
   "engines": {
     "node": ">=18"

@@ -12,7 +12,7 @@
   "crops": [
     {
       "id": "milho",
-      "name_pt": "Milho",
+      "name_pt": "Maize (Corn)",
       "scientific_name": "Zea mays",
       "botanical_family": "Poaceae",
       "role_in_rotation": "Main Crop / High Nitrogen Consumer",
@@ -62,7 +62,7 @@
     },
     {
       "id": "feijao_macunde",
-      "name_pt": "Feijão-macunde (Caupi)",
+      "name_pt": "Cowpea",
       "scientific_name": "Vigna unguiculata",
       "botanical_family": "Fabaceae",
       "role_in_rotation": "Nitrogen Fixer / Drought Resilient",
@@ -113,7 +113,7 @@
     },
     {
       "id": "feijao_vulgar",
-      "name_pt": "Feijão Vulgar (Manteiga / Catarino)",
+      "name_pt": "Common Bean",
       "scientific_name": "Phaseolus vulgaris",
       "botanical_family": "Fabaceae",
       "role_in_rotation": "Nitrogen Fixer / Cash Crop",
@@ -162,7 +162,7 @@
     },
     {
       "id": "mandioca",
-      "name_pt": "Mandioca",
+      "name_pt": "Cassava",
       "scientific_name": "Manihot esculenta",
       "botanical_family": "Euphorbiaceae",
       "role_in_rotation": "Food Security / Extreme Drought Tolerance",
@@ -213,7 +213,7 @@
     },
     {
       "id": "ginguba",
-      "name_pt": "Ginguba (Amendoim)",
+      "name_pt": "Groundnut (Peanut)",
       "scientific_name": "Arachis hypogaea",
       "botanical_family": "Fabaceae",
       "role_in_rotation": "Nitrogen Fixer / Sandy Soils",
@@ -263,7 +263,7 @@
     },
     {
       "id": "massambala",
-      "name_pt": "Massambala (Sorgo)",
+      "name_pt": "Sorghum",
       "scientific_name": "Sorghum bicolor",
       "botanical_family": "Poaceae",
       "role_in_rotation": "Maize Substitute in Dry Zones",
@@ -313,7 +313,7 @@
     },
     {
       "id": "batata_doce",
-      "name_pt": "Batata-doce",
+      "name_pt": "Sweet Potato",
       "scientific_name": "Ipomoea batatas",
       "botanical_family": "Convolvulaceae",
       "role_in_rotation": "Ground Cover / Pest Cycle Break",
@@ -361,7 +361,7 @@
     },
     {
       "id": "cevada",
-      "name_pt": "Cevada",
+      "name_pt": "Barley",
       "scientific_name": "Hordeum vulgare",
       "botanical_family": "Poaceae",
       "role_in_rotation": "Highland Cereal / Cool Season Cycle",
@@ -409,7 +409,7 @@
       "gaez_stats": {
         "crop": "brl",
         "crop_name_en": "Barley",
-        "crop_name_pt": "Cevada",
+        "crop_name_pt": "Barley",
         "scientific_name": "Hordeum vulgare",
         "source": "FAO GAEZ v4 (brl_hy0_High_ENSEMBLE)",
         "basins": {

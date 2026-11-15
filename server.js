@@ -48,6 +48,46 @@ function findCrop(identifier) {
   );
 }
 
+function englishAnalysis(analysis) {
+  const {
+    estrategias,
+    condicoes,
+    estado_epoca,
+    cuidados,
+    premissas,
+    metadados,
+    estado,
+    versao_analise,
+    request,
+    ...english
+  } = analysis;
+
+  const {
+    poligono,
+    area_ha,
+    current_crop,
+    cultura_atual,
+    current_planting_date,
+    cultura_habitual,
+    usual_crop,
+    rega,
+    tipo_solo,
+    primary_goal,
+    objetivo_principal,
+    secondary_goal,
+    objetivo_secundario,
+    num_epocas,
+    ...englishRequest
+  } = request;
+
+  return {
+    ...english,
+    request: englishRequest,
+    strategies: analysis.strategies.map(({ nome, sequencia, pontuacao, pontuacao_por_criterio, confianca, porque, evidencia, beneficios, lacunas, riscos, fontes, ...strategy }) => strategy),
+    premises: analysis.premises.map(({ nome, valor, tipo, opcoes, origem, estado, editavel, ...premise }) => premise)
+  };
+}
+
 function normaliseRequest(body = {}) {
   const latitude = numberInRange(body.latitude, -18.5, -4.3, -8.84);
   const longitude = numberInRange(body.longitude, 11.6, 24.1, 13.23);
@@ -159,7 +199,6 @@ function buildRecommendation(climate, crop) {
     id: crop.id,
     name: cropName,
     name_en: crop.name_en || cropName,
-    name_pt: crop.name_pt,
     score,
     role: crop.role_in_rotation,
     waterNeed: `${crop.climate_requirements.water_need_mm_min}-${crop.climate_requirements.water_need_mm_max} mm`,
@@ -264,7 +303,7 @@ function buildStrategies(climate, request) {
     }
 
     const confidence = rating.score >= 70 ? 'high' : rating.score >= 45 ? 'medium' : 'low';
-    const confianca = rating.score >= 70 ? 'alta' : rating.score >= 45 ? 'media' : 'baixa';
+    const confianca = confidence;
 
     const strategyName = isReference
       ? 'Current Rotation (Baseline)'
@@ -272,11 +311,7 @@ function buildStrategies(climate, request) {
       ? 'Living Soil & Resilience'
       : 'Water Conservation';
 
-    const strategyNamePt = isReference
-      ? 'Rotação atual (referência)'
-      : index === 1
-      ? 'Solo vivo e resiliência'
-      : 'Poupança de água';
+    const strategyNamePt = strategyName;
 
     const whyText = isReference
       ? 'Maintains the current farmer practice as a baseline for agronomic comparison.'
@@ -368,7 +403,7 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
     {
       id: 'soil_type',
       name: 'Soil type',
-      nome: 'Tipo de solo',
+      nome: 'Soil type',
       key: 'soil',
       value: request.soilType || 'loam',
       valor: request.soilType || 'loam',
@@ -377,34 +412,34 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       options: ['sandy', 'loam', 'clay', 'unknown'],
       opcoes: ['sandy', 'loam', 'clay', 'unknown'],
       origin: 'farmer',
-      origem: 'agricultor',
+      origem: 'farmer',
       source: 'Farmer',
       status: 'pending_validation',
-      estado: 'por_validar',
+      estado: 'pending_validation',
       editable: true,
       editavel: true
     },
     {
       id: 'irrigation',
       name: 'Access to irrigation',
-      nome: 'Acesso a rega',
+      nome: 'Access to irrigation',
       key: 'irrigation',
       value: request.irrigation === 'Yes' || request.rega,
       valor: request.irrigation === 'Yes' || request.rega,
       type: 'boolean',
       tipo: 'boolean',
       origin: 'farmer',
-      origem: 'agricultor',
+      origem: 'farmer',
       source: 'Farmer',
       status: 'pending_validation',
-      estado: 'por_validar',
+      estado: 'pending_validation',
       editable: true,
       editavel: true
     },
     {
       id: 'seeds',
       name: 'Seed availability',
-      nome: 'Sementes disponíveis',
+      nome: 'Seed availability',
       key: 'seeds',
       value: 'To confirm locally',
       valor: 'To confirm locally',
@@ -413,29 +448,29 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       options: ['Certified local varieties', 'Informal local market', 'To confirm locally'],
       opcoes: ['Certified local varieties', 'Informal local market', 'To confirm locally'],
       origin: 'farmer',
-      origem: 'agricultor',
+      origem: 'farmer',
       source: 'Farmer',
       status: 'pending_validation',
-      estado: 'por_validar',
+      estado: 'pending_validation',
       editable: true,
       editavel: true
     },
     {
       id: 'calendar',
       name: 'Planting start month',
-      nome: 'Início do plantio',
+      nome: 'Planting start month',
       key: 'calendar',
       value: 'October',
-      valor: 'Outubro',
+      valor: 'October',
       type: 'select',
       tipo: 'select',
       options: ['September', 'October', 'November', 'December'],
       opcoes: ['September', 'October', 'November', 'December'],
       origin: 'literature',
-      origem: 'literatura',
+      origem: 'literature',
       source: 'Literature',
       status: 'pending_validation',
-      estado: 'por_validar',
+      estado: 'pending_validation',
       editable: true,
       editavel: true
     }
@@ -444,7 +479,7 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
   return {
     id,
     status: 'completed',
-    estado: 'concluida',
+    estado: 'completed',
     version,
     versao_analise: version,
     request,
@@ -576,8 +611,6 @@ app.get(['/api/crops', '/api/culturas'], (req, res) => {
       id: crop.id,
       name: crop.name_en || crop.name || crop.name_pt,
       name_en: crop.name_en || crop.name_pt,
-      name_pt: crop.name_pt,
-      nome: crop.name_pt,
       scientific_name: crop.scientific_name,
       botanical_family: crop.botanical_family,
       role_in_rotation: crop.role_in_rotation,
@@ -597,7 +630,11 @@ app.get(['/api/crops', '/api/culturas'], (req, res) => {
 // FAO GAEZ v4 Catalog (all 51 crops)
 app.get('/api/gaez/crops', async (req, res) => {
   try {
-    res.json(await listGaezCrops());
+    const catalog = await listGaezCrops();
+    res.json({
+      ...catalog,
+      crops: catalog.crops.map(({ name_pt, ...crop }) => crop)
+    });
   } catch (error) {
     res.status(500).json({ error: 'Could not retrieve GAEZ crop catalog', detail: error.message });
   }
@@ -642,19 +679,14 @@ app.post(['/api/analyses', '/api/analises'], async (req, res) => {
     const climate = await fetchPower(request.latitude, request.longitude);
     const analysis = buildAnalysis(climate, request);
     analysisCache.set(analysis.id, analysis);
-    res.status(201).json(analysis);
+    res.status(201).json(englishAnalysis(analysis));
   } catch (error) {
     res.status(502).json({
       status: 'error',
-      estado: 'erro',
       error: {
         code: 'nasa_power_error',
         message: 'Could not generate analysis with NASA data.',
         detail: error.message
-      },
-      erro: {
-        codigo: 'nasa_power_erro',
-        mensagem: 'Could not generate analysis with NASA data.'
       }
     });
   }
@@ -666,18 +698,13 @@ app.get(['/api/analyses/:id', '/api/analises/:id'], (req, res) => {
   if (!analysis) {
     return res.status(404).json({
       status: 'error',
-      estado: 'erro',
       error: {
         code: 'analysis_not_found',
         message: 'Analysis not found.'
-      },
-      erro: {
-        codigo: 'analise_nao_encontrada',
-        mensagem: 'Analysis not found.'
       }
     });
   }
-  res.json(analysis);
+  res.json(englishAnalysis(analysis));
 });
 
 // Update Premises and Recalculate (supports /api/analyses/:id/premises and legacy /api/analises/:id/premissas)
@@ -686,14 +713,9 @@ app.patch(['/api/analyses/:id/premises', '/api/analises/:id/premissas'], (req, r
   if (!analysis) {
     return res.status(404).json({
       status: 'error',
-      estado: 'erro',
       error: {
         code: 'analysis_not_found',
         message: 'Analysis not found.'
-      },
-      erro: {
-        codigo: 'analise_nao_encontrada',
-        mensagem: 'Analysis not found.'
       }
     });
   }
@@ -727,17 +749,17 @@ app.patch(['/api/analyses/:id/premises', '/api/analises/:id/premissas'], (req, r
 
   updated.premises = updated.premises.map((premise) => {
     if ((premise.id === 'soil_type' || premise.key === 'soil') && updatedRequest.soilType) {
-      return { ...premise, value: updatedRequest.soilType, valor: updatedRequest.soilType, status: 'validated', estado: 'validada' };
+      return { ...premise, value: updatedRequest.soilType, valor: updatedRequest.soilType, status: 'validated', estado: 'validated' };
     }
     if ((premise.id === 'irrigation' || premise.key === 'irrigation') && typeof updatedRequest.rega === 'boolean') {
-      return { ...premise, value: updatedRequest.rega, valor: updatedRequest.rega, status: 'validated', estado: 'validada' };
+      return { ...premise, value: updatedRequest.rega, valor: updatedRequest.rega, status: 'validated', estado: 'validated' };
     }
     return premise;
   });
   updated.premissas = updated.premises;
 
   analysisCache.set(updated.id, updated);
-  res.json(updated);
+  res.json(englishAnalysis(updated));
 });
 
 // Fallback for static prototype interface in public/

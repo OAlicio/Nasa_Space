@@ -111,7 +111,7 @@ async function main() {
   const aggregated = {
     crop: 'brl',
     crop_name_en: 'Barley',
-    crop_name_pt: 'Cevada',
+    crop_name_pt: 'Barley',
     scientific_name: 'Hordeum vulgare',
     source: 'FAO GAEZ v4 (brl_hy0_High_ENSEMBLE)',
     basins: {
