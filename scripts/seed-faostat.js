@@ -1,7 +1,9 @@
-const fs = require('node:fs/promises');
-const path = require('node:path');
-const { close, migrate, upsertPlant } = require('../db');
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { close, migrate, upsertPlant } from '../db.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const apiUrl = process.env.FAOSTAT_API_URL || 'https://fenixservices.fao.org/api/faostat/data/v1/en/QCL';
 const cropsPath = path.join(__dirname, '..', 'plants.json');
 const faostatNames = {
@@ -17,7 +19,7 @@ const faostatNames = {
 async function fetchFaostat(item) {
   const url = new URL(apiUrl);
   url.search = new URLSearchParams({ area_code: '7', item: faostatNames[item] || item, page_size: '100' });
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
   if (!response.ok) throw new Error(`FAOSTAT responded with ${response.status}`);
   const payload = await response.json();
   return payload.data || payload || [];
@@ -54,5 +56,8 @@ async function seed() {
 
 seed()
   .then(() => console.log('Plant catalog seeded in PostgreSQL.'))
-  .catch((error) => { console.error('Could not seed PostgreSQL:', error); process.exitCode = 1; })
+  .catch((error) => {
+    console.error('Could not seed PostgreSQL:', error);
+    process.exitCode = 1;
+  })
   .finally(close);

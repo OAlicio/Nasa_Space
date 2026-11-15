@@ -1,7 +1,11 @@
-const fs = require('node:fs/promises');
-const path = require('node:path');
-require('dotenv/config');
-const { Pool } = require('pg');
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import 'dotenv/config';
+import pg from 'pg';
+
+const { Pool } = pg;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function databaseUrl() {
   const value = process.env.DATABASE_URL;
@@ -35,10 +39,13 @@ async function listPlants() {
       pest_risk_if_monoculture, faostat_item, faostat_stats
     FROM plants ORDER BY id
   `);
-  return { metadata: { region: 'Angola', source: 'PostgreSQL + FAOSTAT' }, crops: rows.map((row) => ({
-    ...row,
-    nitrogen_fixation_kg_ha: Number(row.nitrogen_fixation_kg_ha)
-  })) };
+  return {
+    metadata: { region: 'Angola', source: 'PostgreSQL + FAOSTAT' },
+    crops: rows.map((row) => ({
+      ...row,
+      nitrogen_fixation_kg_ha: Number(row.nitrogen_fixation_kg_ha)
+    }))
+  };
 }
 
 async function upsertPlant(crop, faostatItem, faostatStats = {}) {
@@ -65,14 +72,23 @@ async function upsertPlant(crop, faostatItem, faostatStats = {}) {
       faostat_stats = EXCLUDED.faostat_stats,
       updated_at = NOW()
   `, [
-    crop.id, crop.name_pt, crop.scientific_name, crop.botanical_family,
-    crop.role_in_rotation, crop.nitrogen_impact, crop.nitrogen_fixation_kg_ha,
-    crop.climate_requirements, crop.soil_requirements, crop.angola_calendar,
-    crop.good_successors, crop.pest_risk_if_monoculture, faostatItem,
-    faostatStats
+    crop.id,
+    crop.name_pt,
+    crop.scientific_name,
+    crop.botanical_family,
+    crop.role_in_rotation,
+    crop.nitrogen_impact,
+    crop.nitrogen_fixation_kg_ha,
+    JSON.stringify(crop.climate_requirements || {}),
+    JSON.stringify(crop.soil_requirements || {}),
+    JSON.stringify(crop.angola_calendar || {}),
+    JSON.stringify(crop.good_successors || []),
+    JSON.stringify(crop.pest_risk_if_monoculture || []),
+    faostatItem,
+    JSON.stringify(faostatStats || {})
   ]);
 }
 
 async function close() { if (pool) await pool.end(); }
 
-module.exports = { close, listPlants, migrate, upsertPlant };
+export { close, listPlants, migrate, upsertPlant };
