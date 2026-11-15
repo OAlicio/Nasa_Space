@@ -2,7 +2,11 @@
 
 Serviço de backend em **Node.js (Express)** com **PostgreSQL** para o projeto **Field Shift** (NASA Space Apps Challenge 2026, Desafio 7).
 
-Disponibiliza uma API REST com suporte a CORS para o frontend (Next.js), integrando dados climáticos em tempo real da **NASA POWER** e um catálogo de culturas para Angola enriquecido com dados da **FAO / FAOSTAT**.
+Disponibiliza uma API REST com suporte a CORS para o frontend, integrando dados climáticos em tempo real da **NASA POWER** e um catálogo de culturas para Angola enriquecido com dados da **FAO / FAOSTAT**.
+
+> 🌐 **Repositório do Frontend:**  
+> A interface web da aplicação (desenvolvida em Next.js, Leaflet e Tailwind CSS) encontra-se disponível em:  
+> **[https://github.com/jormaedes/field_shift_frontend](https://github.com/jormaedes/field_shift_frontend)**
 
 ---
 
@@ -10,24 +14,39 @@ Disponibiliza uma API REST com suporte a CORS para o frontend (Next.js), integra
 
 ### Requisitos
 * Node.js >= 18 (o projeto utiliza **ES Modules** — `"type": "module"`)
-* PostgreSQL 14+
+* PostgreSQL 14+ (Local ou em nuvem com [Neon](https://neon.tech))
 
-### Instalar PostgreSQL (Debian/Ubuntu)
+### Opção A: PostgreSQL na Nuvem (Neon)
+Se estiver a utilizar uma base de dados gerenciada no **Neon**:
+1. Obtenha a connection string no painel do Neon (com `sslmode=require`).
+2. Defina-a no ficheiro `.env`:
+```env
+DATABASE_URL="postgresql://neondb_owner:SENHA@ep-xyz.neon.tech/neondb?sslmode=require"
+PORT=4000
+```
+3. Execute as migrações e o povoamento:
+```bash
+npm run db:migrate
+npm run db:seed
+```
+
+---
+
+### Opção B: PostgreSQL Local (Debian/Ubuntu)
 ```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
 sudo systemctl enable --now postgresql
 ```
 
-### Criar Base de Dados e Utilizador
+Crie a base de dados e o utilizador local:
 ```bash
 sudo -u postgres createuser --createdb field_shift
 sudo -u postgres psql -c "ALTER USER field_shift WITH PASSWORD 'change-me';"
 sudo -u postgres createdb --owner=field_shift field_shift
 ```
 
-### Variáveis de Ambiente
-Copie o ficheiro `.env.example` para `.env` e ajuste as credenciais:
+Copie o ficheiro `.env.example` para `.env` e configure:
 ```bash
 cp .env.example .env
 ```
@@ -37,12 +56,15 @@ DATABASE_URL="postgresql://field_shift:change-me@localhost:5432/field_shift"
 PORT=4000
 ```
 
-### Instalação e Povoamento
+---
+
+### Execução dos Comandos
+
 ```bash
 # Instalar dependências
 npm install
 
-# Criar as tabelas no PostgreSQL
+# Criar as tabelas no PostgreSQL (local ou Neon)
 npm run db:migrate
 
 # Povoar catálogo de culturas e estatísticas FAOSTAT
@@ -207,8 +229,7 @@ Recebe os dados do terreno e preferências do agricultor, consulta a API da **NA
       "pontuacao": 87,
       "pontuacao_por_criterio": { "agua": 0.45, "solo": 1, "erosao": 0.95, "mercado": 0.65 },
       "confianca": "alta",
-      "porque": "Combina Batata-doce com culturas de família botânica distinta e fixadora de azoto para quebrar ciclos de pragas e regenerar a terra.",
-      "evidencia": "NASA POWER: 105.8 mm de precipitação acumulada nos últimos 30 dias. Ciclo agronómico da cultura: 130 dias. Objetivo: saude solo.",
+      "porque": "Combina Batata-doce com culturas de família botânica distinta e fixadora de azoto para quebrar ciclos de pragas e regenerar a terra.","evidencia": "NASA POWER: 105.8 mm de precipitação acumulada nos últimos 30 dias. Ciclo agronómico da cultura: 130 dias. Objetivo: saude solo.",
       "beneficios": "Cobertura de Solo / Quebra de Pragas. Potencial de fixação biológica de até 0 kg/ha de azoto no solo.",
       "lacunas": "Tipo de solo indicado pelo agricultor sem análise físico-química de laboratório. Calendário exato a calibrar localmente.",
       "riscos": "Precipitação recente abaixo da necessidade ideal da cultura; pode requerer rega suplementar. Confirmar sementes e pragas locais.",
@@ -337,3 +358,9 @@ Devolve diretamente o resumo climático observado da NASA POWER (precipitação 
 
 #### `GET /api/recommendations?latitude=-12.78&longitude=15.74`
 Devolve a lista ordenada de culturas e respetiva pontuação de adequação climática para o ponto indicado.
+
+---
+
+## 3. Repositórios Relacionados
+
+* **Frontend:** [https://github.com/jormaedes/field_shift_frontend](https://github.com/jormaedes/field_shift_frontend)
