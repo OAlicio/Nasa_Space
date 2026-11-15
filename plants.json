@@ -4,9 +4,9 @@
     "challenge": "NASA Space Apps - Field Shift",
     "version": "1.0",
     "units": {
-      "water_mm": "mm por ciclo",
-      "temp_c": "Graus Celsius",
-      "cycle_days": "Dias"
+      "water_mm": "mm per cycle",
+      "temp_c": "Degrees Celsius",
+      "cycle_days": "Days"
     }
   },
   "crops": [
@@ -15,8 +15,8 @@
       "name_pt": "Milho",
       "scientific_name": "Zea mays",
       "botanical_family": "Poaceae",
-      "role_in_rotation": "Cultura Principal / Alto Consumo",
-      "nitrogen_impact": "Extrator intenso (esgota azoto do solo)",
+      "role_in_rotation": "Main Crop / High Nitrogen Consumer",
+      "nitrogen_impact": "Intensive consumer (depletes soil nitrogen)",
       "nitrogen_fixation_kg_ha": 0,
       "climate_requirements": {
         "temp_min_c": 15,
@@ -25,16 +25,16 @@
         "temp_max_stress_c": 35,
         "water_need_mm_min": 500,
         "water_need_mm_max": 600,
-        "drought_tolerance": "Baixa (crítica na floração)"
+        "drought_tolerance": "Low (critical during flowering)"
       },
       "soil_requirements": {
         "ph_min": 5.5,
         "ph_max": 7.5,
         "preferred_texture": [
-          "Franco",
-          "Franco-argiloso"
+          "Loam",
+          "Clay loam"
         ],
-        "erosion_protection": "Média"
+        "erosion_protection": "Medium"
       },
       "angola_calendar": {
         "cycle_days": 120,
@@ -55,17 +55,18 @@
         "soja"
       ],
       "pest_risk_if_monoculture": [
-        "Lagarta-do-cartucho (Spodoptera frugiperda)"
+        "Fall armyworm (Spodoptera frugiperda)"
       ],
-      "gaez_code": "mze"
+      "gaez_code": "mze",
+      "name_en": "Maize (Corn)"
     },
     {
       "id": "feijao_macunde",
       "name_pt": "Feijão-macunde (Caupi)",
       "scientific_name": "Vigna unguiculata",
       "botanical_family": "Fabaceae",
-      "role_in_rotation": "Fixador de Azoto / Resiliência à Seca",
-      "nitrogen_impact": "Fixador biológico (enriquece o solo)",
+      "role_in_rotation": "Nitrogen Fixer / Drought Resilient",
+      "nitrogen_impact": "Biological nitrogen fixer (enriches soil)",
       "nitrogen_fixation_kg_ha": 60,
       "climate_requirements": {
         "temp_min_c": 18,
@@ -74,16 +75,16 @@
         "temp_max_stress_c": 38,
         "water_need_mm_min": 300,
         "water_need_mm_max": 450,
-        "drought_tolerance": "Alta"
+        "drought_tolerance": "High"
       },
       "soil_requirements": {
         "ph_min": 5,
         "ph_max": 7.5,
         "preferred_texture": [
-          "Franco-arenoso",
-          "Franco"
+          "Sandy loam",
+          "Loam"
         ],
-        "erosion_protection": "Alta (cobertura rápida do solo)"
+        "erosion_protection": "High (rapid ground cover)"
       },
       "angola_calendar": {
         "cycle_days": 75,
@@ -104,18 +105,19 @@
         "batata_doce"
       ],
       "pest_risk_if_monoculture": [
-        "Gorgulho",
-        "Pulgão"
+        "Cowpea weevil",
+        "Aphids"
       ],
-      "gaez_code": "cow"
+      "gaez_code": "cow",
+      "name_en": "Cowpea"
     },
     {
       "id": "feijao_vulgar",
       "name_pt": "Feijão Vulgar (Manteiga / Catarino)",
       "scientific_name": "Phaseolus vulgaris",
       "botanical_family": "Fabaceae",
-      "role_in_rotation": "Fixador de Azoto / Rendimento Comercial",
-      "nitrogen_impact": "Fixador biológico moderado",
+      "role_in_rotation": "Nitrogen Fixer / Cash Crop",
+      "nitrogen_impact": "Moderate biological nitrogen fixer",
       "nitrogen_fixation_kg_ha": 40,
       "climate_requirements": {
         "temp_min_c": 14,
@@ -124,16 +126,16 @@
         "temp_max_stress_c": 30,
         "water_need_mm_min": 350,
         "water_need_mm_max": 500,
-        "drought_tolerance": "Média-Baixa"
+        "drought_tolerance": "Medium-Low"
       },
       "soil_requirements": {
         "ph_min": 5.8,
         "ph_max": 7,
         "preferred_texture": [
-          "Franco",
-          "Franco-argiloso"
+          "Loam",
+          "Clay loam"
         ],
-        "erosion_protection": "Média-Alta"
+        "erosion_protection": "Medium-High"
       },
       "angola_calendar": {
         "cycle_days": 90,
@@ -152,18 +154,19 @@
         "batata_rena"
       ],
       "pest_risk_if_monoculture": [
-        "Antracnose",
-        "Mosca-branca"
+        "Anthracnose",
+        "Whitefly"
       ],
-      "gaez_code": "phb"
+      "gaez_code": "phb",
+      "name_en": "Common Bean"
     },
     {
       "id": "mandioca",
       "name_pt": "Mandioca",
       "scientific_name": "Manihot esculenta",
       "botanical_family": "Euphorbiaceae",
-      "role_in_rotation": "Segurança Alimentar / Tolerância Extrema",
-      "nitrogen_impact": "Extrator moderado (especialmente Potássio)",
+      "role_in_rotation": "Food Security / Extreme Drought Tolerance",
+      "nitrogen_impact": "Moderate extractor (especially Potassium)",
       "nitrogen_fixation_kg_ha": 0,
       "climate_requirements": {
         "temp_min_c": 16,
@@ -172,16 +175,16 @@
         "temp_max_stress_c": 38,
         "water_need_mm_min": 600,
         "water_need_mm_max": 1000,
-        "drought_tolerance": "Muito Alta (sobrevive ao cacimbo)"
+        "drought_tolerance": "Very High (survives dry season)"
       },
       "soil_requirements": {
         "ph_min": 4.5,
         "ph_max": 7,
         "preferred_texture": [
-          "Franco-arenoso",
-          "Franco"
+          "Sandy loam",
+          "Loam"
         ],
-        "erosion_protection": "Alta (após fechamento da copa)"
+        "erosion_protection": "High (after canopy closure)"
       },
       "angola_calendar": {
         "cycle_days": 300,
@@ -202,18 +205,19 @@
         "feijao_macunde"
       ],
       "pest_risk_if_monoculture": [
-        "Mosaico da mandioca",
-        "Cochonilha"
+        "Cassava mosaic virus",
+        "Mealybug"
       ],
-      "gaez_code": "csv"
+      "gaez_code": "csv",
+      "name_en": "Cassava"
     },
     {
       "id": "ginguba",
       "name_pt": "Ginguba (Amendoim)",
       "scientific_name": "Arachis hypogaea",
       "botanical_family": "Fabaceae",
-      "role_in_rotation": "Fixador de Azoto / Solos Arenosos",
-      "nitrogen_impact": "Fixador biológico alto",
+      "role_in_rotation": "Nitrogen Fixer / Sandy Soils",
+      "nitrogen_impact": "High biological nitrogen fixer",
       "nitrogen_fixation_kg_ha": 70,
       "climate_requirements": {
         "temp_min_c": 18,
@@ -222,16 +226,16 @@
         "temp_max_stress_c": 36,
         "water_need_mm_min": 450,
         "water_need_mm_max": 600,
-        "drought_tolerance": "Média-Alta"
+        "drought_tolerance": "Medium-High"
       },
       "soil_requirements": {
         "ph_min": 5.5,
         "ph_max": 7,
         "preferred_texture": [
-          "Arenoso",
-          "Franco-arenoso"
+          "Sandy",
+          "Sandy loam"
         ],
-        "erosion_protection": "Alta (cobertura rasteira)"
+        "erosion_protection": "High (creeping ground cover)"
       },
       "angola_calendar": {
         "cycle_days": 110,
@@ -251,18 +255,19 @@
         "mandioca"
       ],
       "pest_risk_if_monoculture": [
-        "Cercosporiose",
-        "Aflatoxinas"
+        "Cercospora leaf spot",
+        "Aflatoxins"
       ],
-      "gaez_code": "grd"
+      "gaez_code": "grd",
+      "name_en": "Groundnut (Peanut)"
     },
     {
       "id": "massambala",
       "name_pt": "Massambala (Sorgo)",
       "scientific_name": "Sorghum bicolor",
       "botanical_family": "Poaceae",
-      "role_in_rotation": "Substituto do Milho em Zonas Secas",
-      "nitrogen_impact": "Extrator moderado",
+      "role_in_rotation": "Maize Substitute in Dry Zones",
+      "nitrogen_impact": "Moderate extractor",
       "nitrogen_fixation_kg_ha": 0,
       "climate_requirements": {
         "temp_min_c": 16,
@@ -271,17 +276,17 @@
         "temp_max_stress_c": 40,
         "water_need_mm_min": 350,
         "water_need_mm_max": 500,
-        "drought_tolerance": "Muito Alta (entra em dormência na seca)"
+        "drought_tolerance": "Very High (enters dormancy during dry spells)"
       },
       "soil_requirements": {
         "ph_min": 5,
         "ph_max": 8,
         "preferred_texture": [
-          "Franco",
-          "Argiloso",
-          "Franco-arenoso"
+          "Loam",
+          "Clay",
+          "Sandy loam"
         ],
-        "erosion_protection": "Média"
+        "erosion_protection": "Medium"
       },
       "angola_calendar": {
         "cycle_days": 115,
@@ -300,18 +305,19 @@
         "ginguba"
       ],
       "pest_risk_if_monoculture": [
-        "Pássaros",
-        "Lagarta-do-cartucho"
+        "Birds",
+        "Fall armyworm"
       ],
-      "gaez_code": "srg"
+      "gaez_code": "srg",
+      "name_en": "Sorghum"
     },
     {
       "id": "batata_doce",
       "name_pt": "Batata-doce",
       "scientific_name": "Ipomoea batatas",
       "botanical_family": "Convolvulaceae",
-      "role_in_rotation": "Cobertura de Solo / Quebra de Pragas",
-      "nitrogen_impact": "Extrator moderado",
+      "role_in_rotation": "Ground Cover / Pest Cycle Break",
+      "nitrogen_impact": "Moderate extractor",
       "nitrogen_fixation_kg_ha": 0,
       "climate_requirements": {
         "temp_min_c": 15,
@@ -320,16 +326,16 @@
         "temp_max_stress_c": 35,
         "water_need_mm_min": 400,
         "water_need_mm_max": 600,
-        "drought_tolerance": "Alta"
+        "drought_tolerance": "High"
       },
       "soil_requirements": {
         "ph_min": 5,
         "ph_max": 6.8,
         "preferred_texture": [
-          "Franco-arenoso",
-          "Franco"
+          "Sandy loam",
+          "Loam"
         ],
-        "erosion_protection": "Muito Alta (ramas cobrem todo o solo)"
+        "erosion_protection": "Very High (vines densely cover the soil)"
       },
       "angola_calendar": {
         "cycle_days": 130,
@@ -348,17 +354,18 @@
         "feijao_vulgar"
       ],
       "pest_risk_if_monoculture": [
-        "Gorgulho-da-batata-doce"
+        "Sweet potato weevil"
       ],
-      "gaez_code": "spo"
+      "gaez_code": "spo",
+      "name_en": "Sweet Potato"
     },
     {
       "id": "cevada",
       "name_pt": "Cevada",
       "scientific_name": "Hordeum vulgare",
       "botanical_family": "Poaceae",
-      "role_in_rotation": "Cereal de Altitude / Ciclo Frio",
-      "nitrogen_impact": "Extrator moderado",
+      "role_in_rotation": "Highland Cereal / Cool Season Cycle",
+      "nitrogen_impact": "Moderate extractor",
       "nitrogen_fixation_kg_ha": 0,
       "climate_requirements": {
         "temp_min_c": 5,
@@ -367,16 +374,16 @@
         "temp_max_stress_c": 30,
         "water_need_mm_min": 350,
         "water_need_mm_max": 500,
-        "drought_tolerance": "Média-Alta (superior ao trigo)"
+        "drought_tolerance": "Medium-High (superior to wheat)"
       },
       "soil_requirements": {
         "ph_min": 6,
         "ph_max": 7.5,
         "preferred_texture": [
-          "Franco",
-          "Franco-argiloso"
+          "Loam",
+          "Clay loam"
         ],
-        "erosion_protection": "Média"
+        "erosion_protection": "Medium"
       },
       "angola_calendar": {
         "cycle_days": 110,
@@ -395,8 +402,8 @@
         "feijao_macunde"
       ],
       "pest_risk_if_monoculture": [
-        "Oídio",
-        "Helmintosporiose"
+        "Powdery mildew",
+        "Helminthosporium leaf blotch"
       ],
       "gaez_code": "brl",
       "gaez_stats": {
@@ -1781,7 +1788,8 @@
             }
           ]
         }
-      }
+      },
+      "name_en": "Barley"
     }
   ]
 }

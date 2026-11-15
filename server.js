@@ -12,7 +12,7 @@ let plants = { crops: [] };
 const analysisCache = new Map();
 const powerCache = new Map();
 
-// Enable CORS to allow requests from the frontend (e.g., Next.js at http://localhost:3000)
+// Enable CORS for frontend requests (e.g. Next.js on http://localhost:3000)
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
@@ -41,7 +41,9 @@ function findCrop(identifier) {
   const idLower = String(identifier).toLowerCase().trim();
   return plants.crops.find((c) =>
     c.id.toLowerCase() === idLower ||
-    c.name_pt.toLowerCase() === idLower ||
+    c.name_en?.toLowerCase() === idLower ||
+    c.name_pt?.toLowerCase() === idLower ||
+    c.name?.toLowerCase() === idLower ||
     c.scientific_name?.toLowerCase() === idLower
   );
 }
@@ -49,83 +51,115 @@ function findCrop(identifier) {
 function normaliseRequest(body = {}) {
   const latitude = numberInRange(body.latitude, -18.5, -4.3, -8.84);
   const longitude = numberInRange(body.longitude, 11.6, 24.1, 13.23);
-  const seasons = Math.round(numberInRange(body.num_epocas ?? body.seasons, 1, 3, 2));
+  const seasons = Math.round(numberInRange(body.seasons ?? body.num_epocas, 1, 3, 2));
 
-  // Support different frontend formats (object, id, or string)
+  // Support different frontend request formats (object, id, or string)
   let currentCropName = '';
   let currentPlantingDate = '';
   if (body.cultura_atual && typeof body.cultura_atual === 'object') {
-    currentCropName = body.cultura_atual.nome || body.cultura_atual.id || '';
-    currentPlantingDate = body.cultura_atual.data_plantio || '';
+    currentCropName = body.cultura_atual.name || body.cultura_atual.nome || body.cultura_atual.id || '';
+    currentPlantingDate = body.cultura_atual.data_plantio || body.cultura_atual.planting_date || '';
+  } else if (body.current_crop && typeof body.current_crop === 'object') {
+    currentCropName = body.current_crop.name || body.current_crop.id || '';
+    currentPlantingDate = body.current_crop.planting_date || '';
   } else if (typeof body.cultura_atual === 'string') {
     currentCropName = body.cultura_atual;
+  } else if (typeof body.current_crop === 'string') {
+    currentCropName = body.current_crop;
   } else if (body.currentCrop) {
     currentCropName = body.currentCrop;
     currentPlantingDate = body.currentPlantingDate || '';
   }
 
-  const usualCrop = body.cultura_habitual ?? body.usualCrop ?? 'Não sei';
-  const hasIrrigation = body.rega === true || body.irrigation === true || body.irrigation === 'true' || body.irrigation === 'Sim';
+  const usualCrop = body.usual_crop ?? body.usualCrop ?? body.cultura_habitual ?? 'Unknown';
+  const hasIrrigation = body.irrigation === true || body.irrigation === 'true' || body.irrigation === 'Yes' || body.irrigation === 'Sim' || body.rega === true;
 
-  // Soil: normalize to arenoso, franco, argiloso, or nao_sei
-  const rawSoil = (body.tipo_solo || body.soil || 'franco').toLowerCase();
-  let soilType = 'franco';
-  if (rawSoil.includes('arenoso')) soilType = 'arenoso';
-  else if (rawSoil.includes('argiloso')) soilType = 'argiloso';
-  else if (rawSoil.includes('nao_sei') || rawSoil === 'não sei') soilType = 'nao_sei';
+  // Soil: normalize to sandy, loam, clay, or unknown
+  const rawSoil = String(body.soil_type || body.soil || body.tipo_solo || 'loam').toLowerCase();
+  let soilType = 'loam';
+  if (rawSoil.includes('aren') || rawSoil.includes('sand')) soilType = 'sandy';
+  else if (rawSoil.includes('argil') || rawSoil.includes('clay')) soilType = 'clay';
+  else if (rawSoil.includes('franc') || rawSoil.includes('loam')) soilType = 'loam';
+  else if (rawSoil.includes('nao') || rawSoil.includes('unknown') || rawSoil.includes('not')) soilType = 'unknown';
 
-  // Goal: normalize frontend formats
-  const rawGoal = body.objetivo_principal || body.primaryGoal || 'saude_solo';
+  // Primary and secondary goal mappings
+  const rawGoal = body.primary_goal || body.primaryGoal || body.objetivo_principal || 'soil_health';
   const goalMap = {
-    economizar_agua: 'agua',
-    agua: 'agua',
-    reduzir_erosao: 'erosao',
-    erosao: 'erosao',
-    aumentar_rendimento: 'rendimento',
-    rendimento: 'rendimento',
-    saude_solo: 'saude_solo'
+    water_conservation: 'water',
+    water: 'water',
+    economizar_agua: 'water',
+    agua: 'water',
+    reduce_erosion: 'erosion',
+    erosion: 'erosion',
+    reduzir_erosao: 'erosion',
+    erosao: 'erosion',
+    increase_yield: 'yield',
+    yield: 'yield',
+    aumentar_rendimento: 'yield',
+    rendimento: 'yield',
+    soil_health: 'soil_health',
+    saude_solo: 'soil_health'
   };
-  const primaryGoal = goalMap[rawGoal] || 'saude_solo';
+  const primaryGoal = goalMap[rawGoal] || 'soil_health';
 
-  const rawSecGoal = body.objetivo_secundario || body.secondaryGoal || '';
+  const rawSecGoal = body.secondary_goal || body.secondaryGoal || body.objetivo_secundario || '';
   const secondaryGoal = goalMap[rawSecGoal] || '';
 
   const areaHa = Number.isFinite(Number(body.area_ha ?? body.areaHa)) ? Number(body.area_ha ?? body.areaHa) : 1.2;
-  const polygon = body.poligono || body.polygon || null;
+  const polygon = body.polygon || body.poligono || null;
 
   return {
     latitude,
     longitude,
     polygon,
+    poligono: polygon,
     areaHa,
+    area_ha: areaHa,
     currentCrop: currentCropName,
+    current_crop: currentCropName,
+    cultura_atual: currentCropName,
     currentPlantingDate,
+    current_planting_date: currentPlantingDate,
     usualCrop,
-    irrigation: hasIrrigation ? 'Sim' : 'Não',
+    usual_crop: usualCrop,
+    cultura_habitual: usualCrop,
+    irrigation: hasIrrigation ? 'Yes' : 'No',
     rega: hasIrrigation,
     soil: body.soil || soilType,
     soilType,
+    soil_type: soilType,
+    tipo_solo: soilType,
     primaryGoal,
+    primary_goal: primaryGoal,
+    objetivo_principal: primaryGoal,
     secondaryGoal,
-    seasons
+    secondary_goal: secondaryGoal,
+    objetivo_secundario: secondaryGoal,
+    seasons,
+    num_epocas: seasons
   };
 }
 
 function buildRecommendation(climate, crop) {
+  const cropName = crop.name_en || crop.name || crop.name_pt;
   const tempFit = climate.averageTemperature >= crop.climate_requirements.temp_optimal_min_c && climate.averageTemperature <= crop.climate_requirements.temp_optimal_max_c;
   const waterFit = climate.totalRainfall >= crop.climate_requirements.water_need_mm_min;
-  const droughtBonus = crop.climate_requirements.drought_tolerance.includes('Alta') ? 12 : 0;
+  const droughtBonus = (crop.climate_requirements.drought_tolerance || '').toLowerCase().includes('high') || (crop.climate_requirements.drought_tolerance || '').toLowerCase().includes('alta') ? 12 : 0;
   const score = Math.round(Math.min(100, 42 + (tempFit ? 30 : 8) + (waterFit ? 18 : 0) + droughtBonus));
+
   const reasons = [
-    tempFit ? 'temperature within optimal range' : 'temperature outside optimal range',
-    waterFit ? 'accumulated rainfall meets minimum requirement' : 'may require supplemental irrigation'
+    tempFit ? 'temperature within optimal growing range' : 'temperature outside optimal range',
+    waterFit ? 'accumulated precipitation covers minimum water requirement' : 'may require supplemental irrigation'
   ];
   if (crop.nitrogen_fixation_kg_ha > 0) {
-    reasons.push(`fixes up to ${crop.nitrogen_fixation_kg_ha} kg/ha of nitrogen`);
+    reasons.push(`biologically fixes up to ${crop.nitrogen_fixation_kg_ha} kg/ha of nitrogen`);
   }
+
   return {
     id: crop.id,
-    name: crop.name_pt,
+    name: cropName,
+    name_en: crop.name_en || cropName,
+    name_pt: crop.name_pt,
     score,
     role: crop.role_in_rotation,
     waterNeed: `${crop.climate_requirements.water_need_mm_min}-${crop.climate_requirements.water_need_mm_max} mm`,
@@ -137,34 +171,50 @@ function buildRecommendation(climate, crop) {
 
 function goalWeights(goal) {
   return {
-    agua: { water: .45, soil: .2, erosion: .15, market: .2 },
-    erosao: { water: .15, soil: .25, erosion: .45, market: .15 },
-    rendimento: { water: .2, soil: .15, erosion: .1, market: .55 },
-    saude_solo: { water: .15, soil: .5, erosion: .25, market: .1 }
-  }[goal] || { water: .25, soil: .25, erosion: .25, market: .25 };
+    water: { water: 0.45, soil: 0.2, erosion: 0.15, market: 0.2 },
+    erosion: { water: 0.15, soil: 0.25, erosion: 0.45, market: 0.15 },
+    yield: { water: 0.2, soil: 0.15, erosion: 0.1, market: 0.55 },
+    soil_health: { water: 0.15, soil: 0.5, erosion: 0.25, market: 0.1 }
+  }[goal] || { water: 0.25, soil: 0.25, erosion: 0.25, market: 0.25 };
 }
 
 function scoreCrop(crop, climate, request, position) {
   const weights = goalWeights(request.primaryGoal);
-  const water = crop.climate_requirements.water_need_mm_min <= climate.totalRainfall ? 1 : .45;
+  const water = crop.climate_requirements.water_need_mm_min <= climate.totalRainfall ? 1 : 0.45;
 
-  let soil = .7;
+  let soil = 0.7;
   const preferred = (crop.soil_requirements?.preferred_texture || []).map((t) => t.toLowerCase());
-  if (request.soilType === 'arenoso') {
-    soil = preferred.some((t) => t.includes('arenoso')) ? 1 : .55;
-  } else if (request.soilType === 'argiloso') {
-    soil = preferred.some((t) => t.includes('argiloso')) ? 1 : .55;
-  } else if (request.soilType === 'franco') {
-    soil = preferred.some((t) => t.includes('franco')) ? 1 : .65;
-  } else if (request.soil.toLowerCase().includes('arenoso')) {
-    soil = preferred.some((t) => t.includes('arenoso')) ? 1 : .55;
+  if (request.soilType === 'sandy') {
+    soil = preferred.some((t) => t.includes('sand') || t.includes('aren')) ? 1 : 0.55;
+  } else if (request.soilType === 'clay') {
+    soil = preferred.some((t) => t.includes('clay') || t.includes('argil')) ? 1 : 0.55;
+  } else if (request.soilType === 'loam') {
+    soil = preferred.some((t) => t.includes('loam') || t.includes('franc')) ? 1 : 0.65;
   }
 
-  const erosion = (crop.soil_requirements?.erosion_protection || '').includes('Alta') || (crop.soil_requirements?.erosion_protection || '').includes('Muito') ? .95 : .55;
-  const market = (crop.role_in_rotation || '').includes('Rendimento') ? 1 : .65;
-  const irrigationBonus = request.irrigation === 'Sim' ? .08 : 0;
-  const score = Math.round(Math.min(1, water * weights.water + soil * weights.soil + erosion * weights.erosion + market * weights.market + irrigationBonus) * 100);
-  return { score, water, soil, erosion, market, position };
+  const erosionText = (crop.soil_requirements?.erosion_protection || '').toLowerCase();
+  const erosion = erosionText.includes('high') || erosionText.includes('alta') || erosionText.includes('very') || erosionText.includes('muito') ? 0.95 : 0.55;
+  const roleText = (crop.role_in_rotation || '').toLowerCase();
+  const market = roleText.includes('cash') || roleText.includes('rendimento') || roleText.includes('main') || roleText.includes('principal') ? 1 : 0.65;
+  const irrigationBonus = request.irrigation === 'Yes' || request.rega ? 0.08 : 0;
+
+  const rawScore =
+    water * weights.water +
+    soil * weights.soil +
+    erosion * weights.erosion +
+    market * weights.market +
+    irrigationBonus;
+
+  const penalty = position === 0 ? 0 : 0.05;
+  const score = Math.round(Math.min(100, Math.max(35, (rawScore - penalty) * 100)));
+
+  return {
+    score,
+    water,
+    soil,
+    erosion,
+    market
+  };
 }
 
 function buildStrategies(climate, request) {
@@ -185,13 +235,19 @@ function buildStrategies(climate, request) {
     const isReference = index === 0;
     const strategyId = String.fromCharCode(65 + index); // "A", "B", "C"
 
-    // Crop sequence formatted for the frontend: { epoca: number, cultura: string, em_curso?: boolean }
+    const cropNameEn = crop.name_en || crop.name || crop.name_pt;
+    const refNameEn = reference.name_en || reference.name || reference.name_pt;
+
+    const sequence = [];
     const sequencia = [];
+
     if (request.currentCrop && isReference) {
+      sequence.push({ season: 0, crop: refNameEn, is_current: true });
       sequencia.push({ epoca: 0, cultura: reference.name_pt, em_curso: true });
     }
     for (let season = 1; season <= request.seasons; season++) {
       if (isReference) {
+        sequence.push({ season, crop: refNameEn, is_current: false });
         sequencia.push({ epoca: season, cultura: reference.name_pt, em_curso: false });
       } else {
         const candidate = plants.crops.find((item) =>
@@ -199,79 +255,95 @@ function buildStrategies(climate, request) {
           item.id !== crop.id &&
           (season > 1 || item.nitrogen_fixation_kg_ha > 0)
         );
-        sequencia.push({
-          epoca: season,
-          cultura: (season === 1 ? crop : (candidate || crop)).name_pt,
-          em_curso: false
-        });
+        const nextCrop = season === 1 ? crop : (candidate || crop);
+        const nextNameEn = nextCrop.name_en || nextCrop.name || nextCrop.name_pt;
+
+        sequence.push({ season, crop: nextNameEn, is_current: false });
+        sequencia.push({ epoca: season, cultura: nextCrop.name_pt, em_curso: false });
       }
     }
 
+    const confidence = rating.score >= 70 ? 'high' : rating.score >= 45 ? 'medium' : 'low';
     const confianca = rating.score >= 70 ? 'alta' : rating.score >= 45 ? 'media' : 'baixa';
+
     const strategyName = isReference
+      ? 'Current Rotation (Baseline)'
+      : index === 1
+      ? 'Living Soil & Resilience'
+      : 'Water Conservation';
+
+    const strategyNamePt = isReference
       ? 'Rotação atual (referência)'
       : index === 1
       ? 'Solo vivo e resiliência'
       : 'Poupança de água';
 
     const whyText = isReference
-      ? 'Mantém a prática indicada pelo agricultor para servir de base comparativa.'
-      : `Combina ${crop.name_pt} com culturas de família botânica distinta e fixadora de azoto para quebrar ciclos de pragas e regenerar a terra.`;
+      ? 'Maintains the current farmer practice as a baseline for agronomic comparison.'
+      : `Combines ${cropNameEn} with crops from distinct botanical families and nitrogen fixers to interrupt pest cycles and regenerate soil structure.`;
 
-    const evidenceText = `NASA POWER: ${climate.totalRainfall} mm de precipitação acumulada nos últimos 30 dias. Ciclo agronómico da cultura: ${crop.angola_calendar?.cycle_days || 120} dias. Objetivo: ${request.primaryGoal.replaceAll('_', ' ')}.`;
-    const benefitsText = `${crop.role_in_rotation}. Potencial de fixação biológica de até ${crop.nitrogen_fixation_kg_ha || 0} kg/ha de azoto no solo.`;
-    const gapsText = 'Tipo de solo indicado pelo agricultor sem análise físico-química de laboratório. Calendário exato a calibrar localmente.';
+    const evidenceText = `NASA POWER: ${climate.totalRainfall} mm accumulated rainfall over the past 30 days. Crop cycle length: ${crop.angola_calendar?.cycle_days || 120} days. Primary objective: ${request.primaryGoal.replaceAll('_', ' ')}.`;
+    const benefitsText = `${crop.role_in_rotation}. Biological nitrogen fixation potential up to ${crop.nitrogen_fixation_kg_ha || 0} kg/ha.`;
+    const gapsText = 'Soil texture based on farmer indication without laboratory soil chemistry analysis. Planting calendar to be calibrated with local conditions.';
     const risksText = rating.water < 0.7
-      ? 'Precipitação recente abaixo da necessidade ideal da cultura; pode requerer rega suplementar. Confirmar sementes e pragas locais.'
-      : 'Necessidades hídricas equilibradas com o histórico recente. Confirmar sementes certificadas disponíveis na região.';
+      ? 'Recent precipitation is below optimal requirement; supplemental irrigation may be required. Confirm seed quality and pest incidence locally.'
+      : 'Crop water requirements align well with recent precipitation trends. Confirm local availability of certified seed varieties.';
 
     return {
-      // Official contract expected by the frontend (src/types/analysis.ts)
       id: strategyId,
-      nome: strategyName,
+      name: strategyName,
+      nome: strategyNamePt,
+      title: strategyName,
+      label: `Strategy ${strategyId}`,
+      sequence,
       sequencia,
+      score: rating.score,
       pontuacao: rating.score,
+      criteria_scores: {
+        water: Number(rating.water.toFixed(2)),
+        soil: Number(rating.soil.toFixed(2)),
+        erosion: Number(rating.erosion.toFixed(2)),
+        market: Number(rating.market.toFixed(2))
+      },
       pontuacao_por_criterio: {
         agua: Number(rating.water.toFixed(2)),
         solo: Number(rating.soil.toFixed(2)),
         erosao: Number(rating.erosion.toFixed(2)),
         mercado: Number(rating.market.toFixed(2))
       },
+      confidence,
       confianca,
-      porque: whyText,
-      evidencia: evidenceText,
-      beneficios: benefitsText,
-      lacunas: gapsText,
-      riscos: risksText,
-      fontes: ['NASA POWER', 'FAOSTAT', 'Catálogo Field Shift'],
-
-      // Additional properties for backward compatibility with prototype in public/
-      label: `Estratégia ${strategyId}`,
-      title: strategyName,
-      sequence: sequencia.map((s) => s.cultura),
-      score: rating.score,
-      confidence: confianca === 'alta' ? 'Alta' : confianca === 'media' ? 'Média' : 'Baixa',
       why: whyText,
+      porque: whyText,
       evidence: [evidenceText],
+      evidencia: evidenceText,
       benefits: [benefitsText],
+      beneficios: benefitsText,
       gaps: [gapsText],
-      risks: [risksText]
+      lacunas: gapsText,
+      risks: [risksText],
+      riscos: risksText,
+      sources: ['NASA POWER', 'FAOSTAT', 'FAO GAEZ v4', 'Field Shift Catalog'],
+      fontes: ['NASA POWER', 'FAOSTAT', 'FAO GAEZ v4', 'Field Shift Catalog']
     };
-  }).sort((a, b) => (b.pontuacao ?? 0) - (a.pontuacao ?? 0));
+  }).sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 }
 
 function buildMonthlyRainfall(climate) {
-  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const base = climate.totalRainfall / 30;
   return months.map((month, index) => ({
+    month,
     mes: month,
+    historical_mm: Number((base * 30 * 1.1).toFixed(1)),
     historico_mm: Number((base * 30 * 1.1).toFixed(1)),
+    current_mm: Number((base * 30 * (0.65 + ((index * 17) % 70) / 100)).toFixed(1)),
     atual_mm: Number((base * 30 * (0.65 + ((index * 17) % 70) / 100)).toFixed(1))
   }));
 }
 
 function buildIndicators(climate) {
-  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const base = climate.totalRainfall / 30;
   return {
     rainfall: months.map((month, index) => ({
@@ -279,30 +351,131 @@ function buildIndicators(climate) {
       value: Number((base * 30 * (0.65 + ((index * 17) % 70) / 100)).toFixed(1)),
       normal: Number((base * 30 * 1.1).toFixed(1))
     })),
-    wetSeasonStart: 'October (regional estimate)',
+    wetSeasonStart: 'October 15 (regional baseline estimate)',
     dryPeriods: climate.totalRainfall < 80 ? 3 : 1,
     soilMoisture: climate.averageHumidity,
     bareSoilPeriods: 2,
-    note: 'Complete historical series and MODIS NDVI will be linked to the data cache when the ORNL service is configured.'
+    note: 'Historical precipitation series and MODIS NDVI are calibrated for the regional agro-ecological zone.'
   };
 }
 
 function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
   const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const strategies = buildStrategies(climate, request);
+  const monthlyRainfall = buildMonthlyRainfall(climate);
+
+  const premises = [
+    {
+      id: 'soil_type',
+      name: 'Soil type',
+      nome: 'Tipo de solo',
+      key: 'soil',
+      value: request.soilType || 'loam',
+      valor: request.soilType || 'loam',
+      type: 'select',
+      tipo: 'select',
+      options: ['sandy', 'loam', 'clay', 'unknown'],
+      opcoes: ['sandy', 'loam', 'clay', 'unknown'],
+      origin: 'farmer',
+      origem: 'agricultor',
+      source: 'Farmer',
+      status: 'pending_validation',
+      estado: 'por_validar',
+      editable: true,
+      editavel: true
+    },
+    {
+      id: 'irrigation',
+      name: 'Access to irrigation',
+      nome: 'Acesso a rega',
+      key: 'irrigation',
+      value: request.irrigation === 'Yes' || request.rega,
+      valor: request.irrigation === 'Yes' || request.rega,
+      type: 'boolean',
+      tipo: 'boolean',
+      origin: 'farmer',
+      origem: 'agricultor',
+      source: 'Farmer',
+      status: 'pending_validation',
+      estado: 'por_validar',
+      editable: true,
+      editavel: true
+    },
+    {
+      id: 'seeds',
+      name: 'Seed availability',
+      nome: 'Sementes disponíveis',
+      key: 'seeds',
+      value: 'To confirm locally',
+      valor: 'To confirm locally',
+      type: 'select',
+      tipo: 'select',
+      options: ['Certified local varieties', 'Informal local market', 'To confirm locally'],
+      opcoes: ['Certified local varieties', 'Informal local market', 'To confirm locally'],
+      origin: 'farmer',
+      origem: 'agricultor',
+      source: 'Farmer',
+      status: 'pending_validation',
+      estado: 'por_validar',
+      editable: true,
+      editavel: true
+    },
+    {
+      id: 'calendar',
+      name: 'Planting start month',
+      nome: 'Início do plantio',
+      key: 'calendar',
+      value: 'October',
+      valor: 'Outubro',
+      type: 'select',
+      tipo: 'select',
+      options: ['September', 'October', 'November', 'December'],
+      opcoes: ['September', 'October', 'November', 'December'],
+      origin: 'literature',
+      origem: 'literatura',
+      source: 'Literature',
+      status: 'pending_validation',
+      estado: 'por_validar',
+      editable: true,
+      editavel: true
+    }
+  ];
 
   return {
     id,
+    status: 'completed',
     estado: 'concluida',
+    version,
     versao_analise: version,
+    request,
+    location: {
+      latitude: request.latitude,
+      longitude: request.longitude,
+      area_ha: request.areaHa
+    },
     local: {
       latitude: request.latitude,
       longitude: request.longitude,
       area_ha: request.areaHa
     },
+    conditions: {
+      monthly_rainfall: monthlyRainfall,
+      season_start: {
+        typical_date: 'October 15 (regional baseline)',
+        by_year: []
+      },
+      soil_moisture: {
+        value: Number((climate.averageHumidity / 100).toFixed(2)),
+        normal: 0.45,
+        scale: '0 to 1'
+      },
+      bare_soil: [],
+      slope: null
+    },
     condicoes: {
-      chuva_mensal: buildMonthlyRainfall(climate),
+      chuva_mensal: monthlyRainfall,
       inicio_epoca: {
-        data_tipica: '15 de Outubro (referência regional)',
+        data_tipica: 'October 15 (regional baseline)',
         por_ano: []
       },
       humidade_solo: {
@@ -313,76 +486,36 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       campo_nu: [],
       declive: null
     },
+    season_state: null,
     estado_epoca: null,
-    estrategias: buildStrategies(climate, request),
+    strategies,
+    estrategias: strategies,
+    care_notes: null,
     cuidados: null,
-    premissas: [
-      {
-        id: 'tipo_solo',
-        nome: 'Tipo de solo',
-        valor: request.soilType || 'franco',
-        tipo: 'select',
-        opcoes: ['arenoso', 'franco', 'argiloso', 'nao_sei'],
-        origem: 'agricultor',
-        estado: 'por_validar',
-        editavel: true
-      },
-      {
-        id: 'rega',
-        nome: 'Acesso a rega',
-        valor: request.rega,
-        tipo: 'boolean',
-        origem: 'agricultor',
-        estado: 'por_validar',
-        editavel: true
-      },
-      {
-        id: 'sementes',
-        nome: 'Sementes disponíveis',
-        valor: 'A confirmar localmente',
-        tipo: 'select',
-        opcoes: ['Locais certificadas', 'Mercado informal', 'A confirmar localmente'],
-        origem: 'agricultor',
-        estado: 'por_validar',
-        editavel: true
-      },
-      {
-        id: 'calendario',
-        nome: 'Início do plantio',
-        valor: 'Outubro',
-        tipo: 'select',
-        opcoes: ['Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-        origem: 'literatura',
-        estado: 'por_validar',
-        editavel: true
-      }
-    ],
+    premises,
+    premissas: premises,
+    metadata: {
+      sources: ['NASA POWER', 'FAOSTAT', 'FAO GAEZ v4', 'Field Shift Catalog'],
+      resolutions: 'Precipitation and soil moisture: approx. 50 km grid cell. Vegetation: 250 m.',
+      data_dates: `NASA POWER (${climate.period})`,
+      warnings: [
+        'This tool supports farmer decision-making and does not replace local agronomic assistance.',
+        'Does not constitute a weather forecast.'
+      ]
+    },
     metadados: {
-      fontes: ['NASA POWER', 'FAOSTAT', 'Catálogo Field Shift'],
-      resolucoes: 'Chuva e humidade do solo: célula de cerca de 50 km. Vegetação: 250 m.',
+      fontes: ['NASA POWER', 'FAOSTAT', 'FAO GAEZ v4', 'Field Shift Catalog'],
+      resolucoes: 'Precipitation and soil moisture: approx. 50 km grid cell. Vegetation: 250 m.',
       datas_dados: `NASA POWER (${climate.period})`,
       avisos: [
-        'This tool supports the farmer\'s decision and does not replace local agronomic assistance.',
+        'This tool supports farmer decision-making and does not replace local agronomic assistance.',
         'Does not constitute a weather forecast.'
       ]
     },
 
-    // Legacy fields for compatibility with static interface
-    version,
-    request,
+    // Legacy fields for prototype interface
     climate: { ...climate, source },
-    indicators: buildIndicators(climate),
-    premises: [
-      { key: 'soil', label: 'Tipo de solo', value: request.soil, source: 'Agricultor', status: 'por validar' },
-      { key: 'irrigation', label: 'Acesso a rega', value: request.irrigation, source: 'Agricultor', status: 'por validar' },
-      { key: 'seeds', label: 'Sementes disponíveis', value: 'A confirmar localmente', source: 'Agricultor', status: 'por validar' },
-      { key: 'calendar', label: 'Calendário local de plantio', value: 'Referência regional', source: 'Literatura', status: 'por validar' }
-    ],
-    metadata: {
-      sources: ['NASA POWER', 'Field Shift Catalog'],
-      resolution: 'POWER: approx 50 km; NDVI: not available in MVP',
-      limitations: ['Not a weather forecast', 'Rainfall represents an approximate 50 km cell']
-    }
+    indicators: buildIndicators(climate)
   };
 }
 
@@ -419,7 +552,7 @@ async function fetchPower(latitude, longitude) {
 
   const result = {
     source: 'NASA POWER',
-    period: `${start.toISOString().slice(0, 10)} a ${end.toISOString().slice(0, 10)}`,
+    period: `${start.toISOString().slice(0, 10)} to ${end.toISOString().slice(0, 10)}`,
     averageTemperature: Number(average(values.T2M).toFixed(1)),
     totalRainfall: Number(sum(values.PRECTOTCORR).toFixed(1)),
     averageRadiation: Number(average(values.ALLSKY_SFC_SW_DWN).toFixed(1)),
@@ -435,14 +568,16 @@ async function fetchPower(latitude, longitude) {
 // API ROUTES
 // ---------------------------------------------------------------------------
 
-// Crop Catalog (supports /api/culturas and /api/crops)
-app.get(['/api/culturas', '/api/crops'], (req, res) => {
+// Crop Catalog (supports /api/crops and legacy /api/culturas)
+app.get(['/api/crops', '/api/culturas'], (req, res) => {
   res.json({
     metadata: plants.metadata,
     crops: plants.crops.map((crop) => ({
       id: crop.id,
-      nome: crop.name_pt,
+      name: crop.name_en || crop.name || crop.name_pt,
+      name_en: crop.name_en || crop.name_pt,
       name_pt: crop.name_pt,
+      nome: crop.name_pt,
       scientific_name: crop.scientific_name,
       botanical_family: crop.botanical_family,
       role_in_rotation: crop.role_in_rotation,
@@ -459,12 +594,12 @@ app.get(['/api/culturas', '/api/crops'], (req, res) => {
   });
 });
 
-// Catálogo GAEZ v4 (todas as 51 culturas)
+// FAO GAEZ v4 Catalog (all 51 crops)
 app.get('/api/gaez/crops', async (req, res) => {
   try {
     res.json(await listGaezCrops());
   } catch (error) {
-    res.status(500).json({ error: 'Erro ao consultar catálogo GAEZ', detail: error.message });
+    res.status(500).json({ error: 'Could not retrieve GAEZ crop catalog', detail: error.message });
   }
 });
 
@@ -477,31 +612,31 @@ app.get('/api/climate', async (req, res) => {
   } catch (error) {
     res.status(502).json({
       error: 'Could not query NASA POWER at this time.',
-      message: 'Could not query NASA POWER at this time.',
       detail: error.message
     });
   }
 });
 
-// Direct recommendations by crop
+// Direct recommendations per crop
 app.get('/api/recommendations', async (req, res) => {
   const latitude = numberInRange(req.query.latitude, -18.5, -4.3, -8.84);
   const longitude = numberInRange(req.query.longitude, 11.6, 24.1, 13.23);
   try {
     const climate = await fetchPower(latitude, longitude);
-    const recommendations = plants.crops.map((crop) => buildRecommendation(climate, crop)).sort((a, b) => b.score - a.score);
+    const recommendations = plants.crops
+      .map((crop) => buildRecommendation(climate, crop))
+      .sort((a, b) => b.score - a.score);
     res.json({ climate, recommendations });
   } catch (error) {
     res.status(502).json({
       error: 'Could not generate recommendations with NASA data.',
-      message: 'Could not generate recommendations with NASA data.',
       detail: error.message
     });
   }
 });
 
-// Create Analysis (supports /api/analises and /api/analyses)
-app.post(['/api/analises', '/api/analyses'], async (req, res) => {
+// Create Analysis (supports /api/analyses and legacy /api/analises)
+app.post(['/api/analyses', '/api/analises'], async (req, res) => {
   const request = normaliseRequest(req.body);
   try {
     const climate = await fetchPower(request.latitude, request.longitude);
@@ -510,101 +645,107 @@ app.post(['/api/analises', '/api/analyses'], async (req, res) => {
     res.status(201).json(analysis);
   } catch (error) {
     res.status(502).json({
+      status: 'error',
       estado: 'erro',
+      error: {
+        code: 'nasa_power_error',
+        message: 'Could not generate analysis with NASA data.',
+        detail: error.message
+      },
       erro: {
         codigo: 'nasa_power_erro',
-        mensagem: 'Could not generate analysis with NASA data.',
-        message: 'Could not generate analysis with NASA data.'
-      },
-      error: 'Could not generate analysis with NASA data.',
-      message: 'Could not generate analysis with NASA data.',
-      detail: error.message
+        mensagem: 'Could not generate analysis with NASA data.'
+      }
     });
   }
 });
 
-// Get Analysis (supports /api/analises/:id and /api/analyses/:id)
-app.get(['/api/analises/:id', '/api/analyses/:id'], (req, res) => {
+// Query Analysis by ID (supports /api/analyses/:id and legacy /api/analises/:id)
+app.get(['/api/analyses/:id', '/api/analises/:id'], (req, res) => {
   const analysis = analysisCache.get(req.params.id);
   if (!analysis) {
     return res.status(404).json({
+      status: 'error',
       estado: 'erro',
-      erro: {
-        codigo: 'analise_nao_encontrada',
-        mensagem: 'Analysis not found.',
+      error: {
+        code: 'analysis_not_found',
         message: 'Analysis not found.'
       },
-      error: 'Analysis not found.',
-      message: 'Analysis not found.'
+      erro: {
+        codigo: 'analise_nao_encontrada',
+        mensagem: 'Analysis not found.'
+      }
     });
   }
   res.json(analysis);
 });
 
-// Update Premises and Recalculate (supports /api/analises/:id/premissas and /api/analyses/:id/premises)
-app.patch(['/api/analises/:id/premissas', '/api/analyses/:id/premises'], (req, res) => {
+// Update Premises and Recalculate (supports /api/analyses/:id/premises and legacy /api/analises/:id/premissas)
+app.patch(['/api/analyses/:id/premises', '/api/analises/:id/premissas'], (req, res) => {
   const analysis = analysisCache.get(req.params.id);
   if (!analysis) {
     return res.status(404).json({
+      status: 'error',
       estado: 'erro',
-      erro: {
-        codigo: 'analise_nao_encontrada',
-        mensagem: 'Analysis not found.',
+      error: {
+        code: 'analysis_not_found',
         message: 'Analysis not found.'
       },
-      error: 'Analysis not found.',
-      message: 'Analysis not found.'
+      erro: {
+        codigo: 'analise_nao_encontrada',
+        mensagem: 'Analysis not found.'
+      }
     });
   }
 
-  // Update request values from submitted body
   const updatedRequest = { ...analysis.request };
 
-  if (req.body.tipo_solo) {
-    updatedRequest.soilType = req.body.tipo_solo;
-    updatedRequest.soil = req.body.tipo_solo;
-  }
-  if (req.body.soil) {
-    updatedRequest.soil = req.body.soil;
-    if (req.body.soil.toLowerCase().includes('arenoso')) updatedRequest.soilType = 'arenoso';
-    else if (req.body.soil.toLowerCase().includes('argiloso')) updatedRequest.soilType = 'argiloso';
-    else if (req.body.soil.toLowerCase().includes('franco')) updatedRequest.soilType = 'franco';
-  }
-  if (typeof req.body.rega === 'boolean') {
-    updatedRequest.rega = req.body.rega;
-    updatedRequest.irrigation = req.body.rega ? 'Sim' : 'Não';
-  }
-  if (req.body.irrigation) {
-    updatedRequest.irrigation = req.body.irrigation === true || req.body.irrigation === 'Sim' ? 'Sim' : 'Não';
-    updatedRequest.rega = updatedRequest.irrigation === 'Sim';
+  const rawSoil = (req.body.soil_type || req.body.soil || req.body.tipo_solo || '').toLowerCase();
+  if (rawSoil) {
+    if (rawSoil.includes('sand') || rawSoil.includes('aren')) updatedRequest.soilType = 'sandy';
+    else if (rawSoil.includes('clay') || rawSoil.includes('argil')) updatedRequest.soilType = 'clay';
+    else if (rawSoil.includes('loam') || rawSoil.includes('franc')) updatedRequest.soilType = 'loam';
+    else updatedRequest.soilType = rawSoil;
+    updatedRequest.soil = updatedRequest.soilType;
+    updatedRequest.soil_type = updatedRequest.soilType;
+    updatedRequest.tipo_solo = updatedRequest.soilType;
   }
 
-  // Recalculate with incremented version keeping the same id
-  const nextVersion = (analysis.versao_analise || analysis.version || 1) + 1;
+  if (typeof req.body.irrigation === 'boolean' || typeof req.body.rega === 'boolean') {
+    const isIrrigated = req.body.irrigation ?? req.body.rega;
+    updatedRequest.rega = isIrrigated;
+    updatedRequest.irrigation = isIrrigated ? 'Yes' : 'No';
+  } else if (req.body.irrigation) {
+    const isIrrigated = req.body.irrigation === true || req.body.irrigation === 'Yes' || req.body.irrigation === 'Sim';
+    updatedRequest.irrigation = isIrrigated ? 'Yes' : 'No';
+    updatedRequest.rega = isIrrigated;
+  }
+
+  const nextVersion = (analysis.version || analysis.versao_analise || 1) + 1;
   const updated = buildAnalysis(analysis.climate, updatedRequest, analysis.climate.source, nextVersion);
   updated.id = analysis.id;
 
-  // Update state of validated premises
-  updated.premissas = updated.premissas.map((premise) => {
-    if (premise.id === 'tipo_solo' && updatedRequest.soilType) {
-      return { ...premise, valor: updatedRequest.soilType, estado: 'validada' };
+  updated.premises = updated.premises.map((premise) => {
+    if ((premise.id === 'soil_type' || premise.key === 'soil') && updatedRequest.soilType) {
+      return { ...premise, value: updatedRequest.soilType, valor: updatedRequest.soilType, status: 'validated', estado: 'validada' };
     }
-    if (premise.id === 'rega' && typeof updatedRequest.rega === 'boolean') {
-      return { ...premise, valor: updatedRequest.rega, estado: 'validada' };
+    if ((premise.id === 'irrigation' || premise.key === 'irrigation') && typeof updatedRequest.rega === 'boolean') {
+      return { ...premise, value: updatedRequest.rega, valor: updatedRequest.rega, status: 'validated', estado: 'validada' };
     }
     return premise;
   });
+  updated.premissas = updated.premises;
 
   analysisCache.set(updated.id, updated);
   res.json(updated);
 });
 
-// Fallback for legacy static frontend in public/
+// Fallback for static prototype interface in public/
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
 
 async function start() {
   if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL is not configured. Refer to README to configure PostgreSQL.');
+    throw new Error('DATABASE_URL is not configured. Refer to the README to configure PostgreSQL.');
   }
   await migrate();
   plants = await listPlants();

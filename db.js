@@ -13,12 +13,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 function databaseUrl() {
   const value = process.env.DATABASE_URL;
   if (typeof value !== 'string' || !value.trim()) {
-    throw new Error('DATABASE_URL não está configurada. Copie .env.example para .env e informe a ligação PostgreSQL.');
+    throw new Error('DATABASE_URL is not configured. Copy .env.example to .env and configure the PostgreSQL connection.');
   }
   let parsed;
-  try { parsed = new URL(value); } catch { throw new Error('DATABASE_URL não é uma URL PostgreSQL válida.'); }
-  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) throw new Error('DATABASE_URL deve usar o protocolo postgres:// ou postgresql://.');
-  if (!parsed.password && !process.env.PGPASSWORD) throw new Error('A ligação PostgreSQL não tem password. Defina a password na DATABASE_URL ou em PGPASSWORD.');
+  try { parsed = new URL(value); } catch { throw new Error('DATABASE_URL is not a valid PostgreSQL URL.'); }
+  if (!['postgres:', 'postgresql:'].includes(parsed.protocol)) throw new Error('DATABASE_URL must use postgres:// or postgresql:// protocol.');
+  if (!parsed.password && !process.env.PGPASSWORD) throw new Error('PostgreSQL connection has no password. Set password in DATABASE_URL or PGPASSWORD.');
   return value;
 }
 
@@ -36,7 +36,7 @@ async function migrate() {
 
 async function listPlants() {
   const { rows } = await getPool().query(`
-    SELECT id, name_pt, scientific_name, botanical_family, role_in_rotation,
+    SELECT id, name_en, name_pt, scientific_name, botanical_family, role_in_rotation,
       nitrogen_impact, nitrogen_fixation_kg_ha, climate_requirements,
       soil_requirements, angola_calendar, good_successors,
       pest_risk_if_monoculture, faostat_item, faostat_stats,
@@ -47,24 +47,27 @@ async function listPlants() {
     metadata: { region: 'Angola', source: 'PostgreSQL + FAOSTAT + FAO GAEZ v4' },
     crops: rows.map((row) => ({
       ...row,
+      name: row.name_en || row.name_pt,
       nitrogen_fixation_kg_ha: Number(row.nitrogen_fixation_kg_ha)
     }))
   };
 }
 
 async function upsertPlant(crop, faostatItem, faostatStats = {}) {
+  const nameEn = crop.name_en || crop.name_pt;
   const gaezCode = crop.gaez_code || null;
   const gaezStats = crop.gaez_stats || {};
 
   await getPool().query(`
     INSERT INTO plants (
-      id, name_pt, scientific_name, botanical_family, role_in_rotation,
+      id, name_en, name_pt, scientific_name, botanical_family, role_in_rotation,
       nitrogen_impact, nitrogen_fixation_kg_ha, climate_requirements,
       soil_requirements, angola_calendar, good_successors,
       pest_risk_if_monoculture, faostat_item, faostat_stats,
       gaez_code, gaez_stats
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
     ON CONFLICT (id) DO UPDATE SET
+      name_en = EXCLUDED.name_en,
       name_pt = EXCLUDED.name_pt,
       scientific_name = EXCLUDED.scientific_name,
       botanical_family = EXCLUDED.botanical_family,
@@ -83,6 +86,7 @@ async function upsertPlant(crop, faostatItem, faostatStats = {}) {
       updated_at = NOW()
   `, [
     crop.id,
+    nameEn,
     crop.name_pt,
     crop.scientific_name,
     crop.botanical_family,

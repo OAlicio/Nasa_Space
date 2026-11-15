@@ -1,5 +1,9 @@
+-- Field Shift: PostgreSQL Database Schema
+-- Crop catalog and agro-ecological parameters
+
 CREATE TABLE IF NOT EXISTS plants (
   id TEXT PRIMARY KEY,
+  name_en TEXT,
   name_pt TEXT NOT NULL,
   scientific_name TEXT,
   botanical_family TEXT,
@@ -18,12 +22,14 @@ CREATE TABLE IF NOT EXISTS plants (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+ALTER TABLE plants ADD COLUMN IF NOT EXISTS name_en TEXT;
 ALTER TABLE plants ADD COLUMN IF NOT EXISTS gaez_code TEXT;
 ALTER TABLE plants ADD COLUMN IF NOT EXISTS gaez_stats JSONB NOT NULL DEFAULT '{}'::jsonb;
 
 CREATE INDEX IF NOT EXISTS plants_faostat_item_idx ON plants (faostat_item);
 CREATE INDEX IF NOT EXISTS plants_gaez_code_idx ON plants (gaez_code);
 
+-- FAO GAEZ v4 Crop Catalog (51 modeled crops)
 CREATE TABLE IF NOT EXISTS gaez_crops (
   code TEXT PRIMARY KEY,
   name_en TEXT NOT NULL,

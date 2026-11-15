@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,24 +11,169 @@
   </head>
   <body>
     <main class="shell">
-      <header class="topbar"><div class="brand"><span class="brand-mark">FS</span><span>FIELD SHIFT</span></div><div class="live"><span></span> NASA EARTH OBSERVATION LAB</div></header>
-      <section class="hero"><div><p class="eyebrow">Angola · apoio à decisão agrícola</p><h1>Conheça o campo.<br /><em>Escolha a rotação.</em></h1><p class="intro">Compare a prática atual com duas alternativas, usando padrões observados pela NASA e o conhecimento de quem trabalha a terra.</p></div><div class="hero-orbit" aria-hidden="true"><div class="orbit-ring"></div><div class="orbit-core">FIELD<br /><strong>SHIFT</strong></div></div></section>
-      <nav class="steps" aria-label="Etapas da análise"><span class="active">01 Campo</span><span>02 Situação</span><span>03 Objetivo</span><span>04 Resultado</span></nav>
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">FS</span><span>FIELD SHIFT</span></div>
+        <div class="live"><span></span> NASA EARTH OBSERVATION LAB</div>
+      </header>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Angola · Agricultural Decision Support</p>
+          <h1>Understand the field.<br /><em>Choose the rotation.</em></h1>
+          <p class="intro">Compare current crop practices with resilient rotation pathways, powered by NASA Earth observations, FAOSTAT, and FAO GAEZ v4 benchmarks.</p>
+        </div>
+        <div class="hero-orbit" aria-hidden="true">
+          <div class="orbit-ring"></div>
+          <div class="orbit-core">FIELD<br /><strong>SHIFT</strong></div>
+        </div>
+      </section>
+      <nav class="steps" aria-label="Analysis steps">
+        <span class="active">01 Field</span>
+        <span>02 Baseline</span>
+        <span>03 Objective</span>
+        <span>04 Results</span>
+      </nav>
       <form id="analysis-form" class="intake">
-        <section class="form-section"><div><p class="eyebrow">01 · localização</p><h2>Onde fica o terreno?</h2><p class="helper">A chuva e a temperatura vêm de uma célula de cerca de 50 km. A vegetação, quando disponível, é calculada sobre o terreno.</p></div><div class="field-grid"><label>Latitude <input id="latitude" name="latitude" type="number" step="0.01" value="-8.84" required /></label><label>Longitude <input id="longitude" name="longitude" type="number" step="0.01" value="13.23" required /></label><label>Área aproximada (ha) <input name="areaHa" type="number" min="0.1" step="0.1" value="1.2" /></label></div></section>
-        <section class="form-section"><div><p class="eyebrow">02 · situação atual</p><h2>O que está a acontecer no solo?</h2></div><div class="field-grid"><label>Cultura atual <select name="currentCrop"><option value="">Nada plantado agora</option><option value="milho">Milho</option><option value="feijao_macunde">Feijão-macunde</option><option value="mandioca">Mandioca</option><option value="ginguba">Ginguba</option></select></label><label>Se não, costuma plantar <select name="usualCrop"><option value="">Não sei</option><option value="milho">Milho</option><option value="feijao_macunde">Feijão-macunde</option><option value="mandioca">Mandioca</option><option value="ginguba">Ginguba</option></select></label><label>Acesso a rega <select name="irrigation"><option value="false">Não</option><option value="true">Sim</option></select></label><label>Tipo de solo <select name="soil"><option>Franco-arenoso</option><option>Franco</option><option>Franco-argiloso</option><option>Arenoso</option><option>Argiloso</option></select></label></div></section>
-        <section class="form-section"><div><p class="eyebrow">03 · objetivo</p><h2>O que quer melhorar?</h2></div><div class="field-grid"><label>Objetivo principal <select name="primaryGoal"><option value="saude_solo">Saúde do solo</option><option value="agua">Gastar menos água</option><option value="erosao">Reduzir erosão</option><option value="rendimento">Aumentar rendimento</option></select></label><label>Objetivo secundário <select name="secondaryGoal"><option value="">Nenhum</option><option value="agua">Gastar menos água</option><option value="erosao">Reduzir erosão</option><option value="rendimento">Aumentar rendimento</option></select></label><label>Épocas a planear <select name="seasons"><option value="1">1 época</option><option value="2" selected>2 épocas</option><option value="3">3 épocas</option></select></label></div><button class="primary" type="submit">Analisar o terreno <span>↗</span></button></section>
+        <section class="form-section">
+          <div>
+            <p class="eyebrow">01 · Location</p>
+            <h2>Where is the plot located?</h2>
+            <p class="helper">Precipitation and temperature are derived from a ~50 km satellite grid cell. Vegetation parameters are evaluated over the field area.</p>
+          </div>
+          <div class="field-grid">
+            <label>Latitude <input id="latitude" name="latitude" type="number" step="0.01" value="-8.84" required /></label>
+            <label>Longitude <input id="longitude" name="longitude" type="number" step="0.01" value="13.23" required /></label>
+            <label>Approximate Area (ha) <input name="areaHa" type="number" min="0.1" step="0.1" value="1.2" /></label>
+          </div>
+        </section>
+        <section class="form-section">
+          <div>
+            <p class="eyebrow">02 · Baseline Condition</p>
+            <h2>What is happening on the land?</h2>
+          </div>
+          <div class="field-grid">
+            <label>Current crop
+              <select name="currentCrop">
+                <option value="">Nothing currently planted</option>
+                <option value="milho">Maize (Corn)</option>
+                <option value="feijao_macunde">Cowpea</option>
+                <option value="feijao_vulgar">Common Bean</option>
+                <option value="mandioca">Cassava</option>
+                <option value="ginguba">Groundnut (Peanut)</option>
+                <option value="massambala">Sorghum</option>
+                <option value="batata_doce">Sweet Potato</option>
+                <option value="cevada">Barley</option>
+              </select>
+            </label>
+            <label>If unplanted, typical crop
+              <select name="usualCrop">
+                <option value="">Unknown</option>
+                <option value="milho">Maize (Corn)</option>
+                <option value="feijao_macunde">Cowpea</option>
+                <option value="feijao_vulgar">Common Bean</option>
+                <option value="mandioca">Cassava</option>
+                <option value="ginguba">Groundnut (Peanut)</option>
+                <option value="massambala">Sorghum</option>
+                <option value="batata_doce">Sweet Potato</option>
+                <option value="cevada">Barley</option>
+              </select>
+            </label>
+            <label>Access to irrigation
+              <select name="irrigation">
+                <option value="false">No (Rain-fed)</option>
+                <option value="true">Yes (Irrigated)</option>
+              </select>
+            </label>
+            <label>Soil texture
+              <select name="soil">
+                <option value="loam">Loam</option>
+                <option value="sandy">Sandy loam / Sandy</option>
+                <option value="clay">Clay loam / Clay</option>
+                <option value="unknown">Unknown / Not tested</option>
+              </select>
+            </label>
+          </div>
+        </section>
+        <section class="form-section">
+          <div>
+            <p class="eyebrow">03 · Objectives</p>
+            <h2>What is your primary goal?</h2>
+          </div>
+          <div class="field-grid">
+            <label>Primary goal
+              <select name="primaryGoal">
+                <option value="soil_health">Soil Health & Nitrogen</option>
+                <option value="water">Water Conservation</option>
+                <option value="erosion">Reduce Soil Erosion</option>
+                <option value="yield">Increase Yield & Revenue</option>
+              </select>
+            </label>
+            <label>Secondary goal
+              <select name="secondaryGoal">
+                <option value="">None</option>
+                <option value="water">Water Conservation</option>
+                <option value="erosion">Reduce Soil Erosion</option>
+                <option value="yield">Increase Yield & Revenue</option>
+              </select>
+            </label>
+            <label>Seasons to plan
+              <select name="seasons">
+                <option value="1">1 season</option>
+                <option value="2" selected>2 seasons</option>
+                <option value="3">3 seasons</option>
+              </select>
+            </label>
+          </div>
+          <button class="primary" type="submit">Analyze Plot <span>↗</span></button>
+        </section>
       </form>
       <section id="status" class="status" role="status" hidden></section>
       <main id="results" hidden>
-        <section class="results-intro"><div><p class="eyebrow">04 · leitura do campo</p><h2>Três caminhos para comparar</h2><p class="helper">A Estratégia A é a referência. As outras duas respondem ao objetivo escolhido. Isto descreve padrões históricos, não prevê o tempo.</p></div><button id="new-analysis" class="secondary" type="button">Nova análise</button></section>
+        <section class="results-intro">
+          <div>
+            <p class="eyebrow">04 · Field Assessment</p>
+            <h2>Three pathways to compare</h2>
+            <p class="helper">Strategy A is the baseline practice. Strategies B and C optimize for your chosen goal. Reflects historical NASA climate patterns; does not forecast weather.</p>
+          </div>
+          <button id="new-analysis" class="secondary" type="button">New Analysis</button>
+        </section>
         <section class="metrics" id="metrics"></section>
-        <section class="indicators"><div class="section-heading"><div><p class="eyebrow">Sinais observados</p><h2>Condições do local</h2></div><span id="period" class="source-tag"></span></div><div id="indicator-grid" class="indicator-grid"></div></section>
-        <section class="recommendation-layout"><div class="section-heading"><div><p class="eyebrow">Comparação</p><h2>Estratégias de rotação</h2></div><span class="source-tag">A · B · C</span></div><div id="recommendations" class="recommendations"></div></section>
-        <section class="premises"><div class="section-heading"><div><p class="eyebrow">Revisão local</p><h2>Premissas a validar</h2></div><span class="source-tag">EDITÁVEIS</span></div><div id="premise-list"></div><button id="recalculate" class="primary" type="button">Recalcular pontuações <span>↻</span></button></section>
+        <section class="indicators">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Observed Signals</p>
+              <h2>Local Field Conditions</h2>
+            </div>
+            <span id="period" class="source-tag"></span>
+          </div>
+          <div id="indicator-grid" class="indicator-grid"></div>
+        </section>
+        <section class="recommendation-layout">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Comparison</p>
+              <h2>Crop Rotation Strategies</h2>
+            </div>
+            <span class="source-tag">A · B · C</span>
+          </div>
+          <div id="recommendations" class="recommendations"></div>
+        </section>
+        <section class="premises">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Local Validation</p>
+              <h2>Premises to Validate</h2>
+            </div>
+            <span class="source-tag">EDITABLE</span>
+          </div>
+          <div id="premise-list"></div>
+          <button id="recalculate" class="primary" type="button">Recalculate Scores <span>↻</span></button>
+        </section>
         <p id="limitations" class="limitations"></p>
       </main>
-      <footer><span>Fontes: NASA POWER · catálogo Field Shift</span><span>Validar decisões com agricultor ou técnico local</span></footer>
+      <footer>
+        <span>Sources: NASA POWER · FAOSTAT · FAO GAEZ v4 · Field Shift Catalog</span>
+        <span>Always validate recommendations with local extension agents or agricultural experts.</span>
+      </footer>
     </main>
     <script type="module" src="/app.js"></script>
   </body>
