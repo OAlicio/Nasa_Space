@@ -3,7 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { close, migrate, upsertGaezCrop, upsertPlant } from '../db.js';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const catalogPath = path.join(__dirname, '..', 'data', 'gaez_crops_catalog.json');
 const barleySummaryPath = path.join(__dirname, '..', 'data', 'gaez_barley_summary.json');
 const plantsJsonPath = path.join(__dirname, '..', 'plants.json');
@@ -42,10 +43,15 @@ async function seedGaez() {
   console.log(`Synchronized ${plantsData.crops.length} plants into PostgreSQL.`);
 }
 
-seedGaez()
-  .then(() => console.log('GAEZ data successfully seeded into database.'))
-  .catch((err) => {
-    console.error('Failed to seed GAEZ data:', err);
-    process.exitCode = 1;
-  })
-  .finally(close);
+export { seedGaez };
+
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+if (isMain) {
+  seedGaez()
+    .then(() => console.log('GAEZ data successfully seeded into database.'))
+    .catch((err) => {
+      console.error('Failed to seed GAEZ data:', err);
+      process.exitCode = 1;
+    })
+    .finally(close);
+}
