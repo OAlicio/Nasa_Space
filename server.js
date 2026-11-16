@@ -48,44 +48,70 @@ function findCrop(identifier) {
   );
 }
 
-function englishAnalysis(analysis) {
-  const {
-    estrategias,
-    condicoes,
-    estado_epoca,
-    cuidados,
-    premissas,
-    metadados,
-    estado,
-    versao_analise,
-    request,
-    ...english
-  } = analysis;
+// The frontend contract (see field_shift_frontend/src/types/analysis.ts) uses
+// Portuguese field names and enum values. buildAnalysis() produces English
+// enums internally, so every response is mapped here. English aliases are kept
+// because the static prototype in public/ still reads them.
+const CONFIDENCE_PT = { high: 'alta', medium: 'media', low: 'baixa' };
+const ORIGIN_PT = { farmer: 'agricultor', literature: 'literatura', nasa: 'nasa' };
+const STATUS_PT = { completed: 'concluida', processing: 'a_processar', error: 'erro' };
+const PREMISE_ID_PT = { soil_type: 'tipo_solo', irrigation: 'rega' };
 
-  const {
-    poligono,
-    area_ha,
-    current_crop,
-    cultura_atual,
-    current_planting_date,
-    cultura_habitual,
-    usual_crop,
-    rega,
-    tipo_solo,
-    primary_goal,
-    objetivo_principal,
-    secondary_goal,
-    objetivo_secundario,
-    num_epocas,
-    ...englishRequest
-  } = request;
+function contractAnalysis(analysis) {
+  const strategies = analysis.strategies.map((strategy) => ({
+    ...strategy,
+    // "high" -> "alta": the frontend compares against alta/media/baixa
+    confianca: CONFIDENCE_PT[strategy.confidence] ?? strategy.confianca ?? 'baixa'
+  }));
+
+  const premises = analysis.premises.map((premise) => ({
+    ...premise,
+    id: PREMISE_ID_PT[premise.id] ?? premise.id,
+    origem: ORIGIN_PT[premise.origin] ?? 'agricultor',
+    estado: premise.status === 'validated' ? 'validada' : 'por_validar'
+  }));
 
   return {
-    ...english,
-    request: englishRequest,
-    strategies: analysis.strategies.map(({ nome, sequencia, pontuacao, pontuacao_por_criterio, confianca, porque, evidencia, beneficios, lacunas, riscos, fontes, ...strategy }) => strategy),
-    premises: analysis.premises.map(({ nome, valor, tipo, opcoes, origem, estado, editavel, ...premise }) => premise)
+    ...analysis,
+    estado: STATUS_PT[analysis.status] ?? 'concluida',
+    versao_analise: analysis.version ?? 1,
+    estrategias: strategies,
+    strategies,
+    premissas: premises,
+    premises,
+    // The Portuguese blocks carry the contract field names, so they win; the
+    // English ones stay as aliases for the static prototype in public/.
+    condicoes: analysis.condicoes ?? analysis.conditions,
+    conditions: analysis.conditions ?? analysis.condicoes,
+    metadados: analysis.metadados ?? analysis.metadata,
+    metadata: analysis.metadata ?? analysis.metadados,
+    cuidados: analysis.cuidados ?? analysis.care_notes,
+    care_notes: analysis.care_notes ?? analysis.cuidados
   };
+}
+
+function apiError(code, message, detail) {
+  return {
+    status: 'error',
+    erro: { codigo: code, mensagem: message },
+    error: { code, message },
+    ...(detail ? { detail } : {})
+  };
+}
+
+// Node's fetch hides the useful part of network failures in error.cause.
+function errorDetail(error) {
+  const cause = error?.cause?.code || error?.cause?.message;
+  return cause ? `${error.message} (${cause})` : (error?.message || String(error));
+}
+
+const TRANSIENT_CAUSES = new Set(['ETIMEDOUT', 'ECONNRESET', 'ECONNREFUSED', 'EAI_AGAIN', 'ENETUNREACH', 'EHOSTUNREACH']);
+
+function isTransientPowerError(error) {
+  return error.name === 'TimeoutError'
+    || error.status === 429
+    || (error.status || 0) >= 500
+    || TRANSIENT_CAUSES.has(error.cause?.code);
 }
 
 function normaliseRequest(body = {}) {
@@ -476,6 +502,21 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
     }
   ];
 
+  const powerWarningsPt = climate.stale
+    ? [
+        climate.fallbackCell
+          ? 'A NASA POWER está indisponível: os valores de chuva, temperatura e humidade são a leitura mais recente de uma célula vizinha (~50 km) e podem não corresponder exatamente a este terreno.'
+          : 'A NASA POWER está indisponível: os valores de chuva, temperatura e humidade são a última leitura guardada para este local e podem não incluir os últimos dias.'
+      ]
+    : [];
+  const powerWarningsEn = climate.stale
+    ? [
+        climate.fallbackCell
+          ? 'NASA POWER is temporarily unavailable: rainfall, temperature and humidity come from the nearest cached ~50 km grid cell and may not match this field exactly.'
+          : 'NASA POWER is temporarily unavailable: rainfall, temperature and humidity are the last cached reading for this location and may not include the most recent days.'
+      ]
+    : [];
+
   return {
     id,
     status: 'completed',
@@ -535,7 +576,8 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       data_dates: `NASA POWER (${climate.period})`,
       warnings: [
         'This tool supports farmer decision-making and does not replace local agronomic assistance.',
-        'Does not constitute a weather forecast.'
+        'Does not constitute a weather forecast.',
+        ...powerWarningsEn
       ]
     },
     metadados: {
@@ -544,7 +586,8 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
       datas_dados: `NASA POWER (${climate.period})`,
       avisos: [
         'This tool supports farmer decision-making and does not replace local agronomic assistance.',
-        'Does not constitute a weather forecast.'
+        'Does not constitute a weather forecast.',
+        ...powerWarningsPt
       ]
     },
 
@@ -554,14 +597,18 @@ function buildAnalysis(climate, request, source = 'NASA POWER', version = 1) {
   };
 }
 
-async function fetchPower(latitude, longitude) {
-  const key = cacheKey(latitude, longitude);
-  if (powerCache.has(key)) return { ...powerCache.get(key), cached: true };
+// NASA POWER occasionally answers slowly or with a transient error. Retry a
+// couple of times and, if the same grid cell was queried before, fall back to
+// that reading instead of failing the whole analysis (flagged in the warnings).
+const POWER_TIMEOUT_MS = Number(process.env.NASA_POWER_TIMEOUT_MS) || 12_000;
+const POWER_ATTEMPTS = 3;
+const POWER_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
 
-  const end = new Date();
-  const start = new Date(end);
-  start.setUTCDate(start.getUTCDate() - 30);
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
+function powerUrl(latitude, longitude, start, end) {
   const url = new URL('https://power.larc.nasa.gov/api/temporal/daily/point');
   url.search = new URLSearchParams({
     parameters: 'T2M,PRECTOTCORR,ALLSKY_SFC_SW_DWN,RH2M',
@@ -572,10 +619,76 @@ async function fetchPower(latitude, longitude) {
     end: dateString(end),
     format: 'JSON'
   });
+  return url;
+}
 
-  const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
-  if (!response.ok) throw new Error(`NASA POWER responded with status ${response.status}`);
-  const payload = await response.json();
+async function requestPower(url, attempts = POWER_ATTEMPTS, timeoutMs = POWER_TIMEOUT_MS) {
+  let lastError;
+
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    const startedAt = Date.now();
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(timeoutMs) });
+      if (response.ok) return response.json();
+
+      lastError = new Error(`NASA POWER respondeu ${response.status}`);
+      lastError.status = response.status;
+      // 4xx (except 429) will not improve on retry.
+      if (response.status >= 400 && response.status < 500 && response.status !== 429) break;
+    } catch (error) {
+      lastError = error;
+    }
+
+    console.warn(`[NASA POWER] tentativa ${attempt}/${attempts} falhou após ${Date.now() - startedAt} ms: ${lastError.message}`);
+    if (attempt < attempts) await sleep(500 * attempt);
+  }
+
+  throw lastError;
+}
+
+// POWER data is a coarse grid cell (~50 km), so a cached reading from a nearby
+// cell is a better answer than failing the whole analysis while NASA is down.
+function nearestCachedPower(latitude, longitude) {
+  let best = null;
+
+  for (const [key, cached] of powerCache) {
+    const [lat, lon] = key.split(',').map(Number);
+    const distance = Math.hypot(lat - latitude, lon - longitude);
+    if (distance <= 0.6 && (!best || distance < best.distance)) {
+      best = { entry: cached, distance };
+    }
+  }
+
+  return best?.entry ?? null;
+}
+
+async function fetchPower(latitude, longitude) {
+  const key = cacheKey(latitude, longitude);
+  const entry = powerCache.get(key);
+  if (entry && Date.now() - entry.storedAt < POWER_CACHE_TTL_MS) {
+    return { ...entry.result, cached: true };
+  }
+
+  const end = new Date();
+  const start = new Date(end);
+  start.setUTCDate(start.getUTCDate() - 30);
+
+  let payload;
+  try {
+    // With a stale reading available, try once with a short timeout and fall
+    // back fast instead of making the user wait ~40 s.
+    payload = entry
+      ? await requestPower(powerUrl(latitude, longitude, start, end), 1, Math.min(POWER_TIMEOUT_MS, 5_000))
+      : await requestPower(powerUrl(latitude, longitude, start, end));
+  } catch (error) {
+    const fallback = entry || nearestCachedPower(latitude, longitude);
+    if (fallback) {
+      console.warn(`[NASA POWER] indisponível; a usar leitura de ${new Date(fallback.storedAt).toISOString()} para ${key} (${error.cause?.code || error.message})`);
+      return { ...fallback.result, cached: true, stale: true, fallbackCell: !entry };
+    }
+    throw error;
+  }
+
   const values = payload.properties?.parameter || {};
 
   const valid = (series) => Object.values(series || {}).filter((value) => Number.isFinite(value) && value > -900);
@@ -595,13 +708,23 @@ async function fetchPower(latitude, longitude) {
     coordinates: { latitude, longitude }
   };
 
-  powerCache.set(key, result);
+  powerCache.set(key, { result, storedAt: Date.now() });
   return result;
 }
 
 // ---------------------------------------------------------------------------
 // API ROUTES
 // ---------------------------------------------------------------------------
+
+// Health check: lets the frontend confirm it is reaching the right backend.
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    crops: plants.crops.length,
+    cache: { analyses: analysisCache.size, power: powerCache.size },
+    uptimeSeconds: Math.round(process.uptime())
+  });
+});
 
 // Crop Catalog (supports /api/crops and legacy /api/culturas)
 app.get(['/api/crops', '/api/culturas'], (req, res) => {
@@ -636,7 +759,7 @@ app.get('/api/gaez/crops', async (req, res) => {
       crops: catalog.crops.map(({ name_pt, ...crop }) => crop)
     });
   } catch (error) {
-    res.status(500).json({ error: 'Could not retrieve GAEZ crop catalog', detail: error.message });
+    res.status(500).json(apiError('gaez_catalog_error', 'Não foi possível obter o catálogo de culturas GAEZ.', error.message));
   }
 });
 
@@ -647,10 +770,8 @@ app.get('/api/climate', async (req, res) => {
   try {
     res.json(await fetchPower(latitude, longitude));
   } catch (error) {
-    res.status(502).json({
-      error: 'Could not query NASA POWER at this time.',
-      detail: error.message
-    });
+    console.error(`[clima] NASA POWER falhou (${latitude}, ${longitude}): ${errorDetail(error)}`);
+    res.status(502).json(apiError('nasa_power_unavailable', 'Não foi possível consultar a NASA POWER neste momento.', errorDetail(error)));
   }
 });
 
@@ -665,30 +786,35 @@ app.get('/api/recommendations', async (req, res) => {
       .sort((a, b) => b.score - a.score);
     res.json({ climate, recommendations });
   } catch (error) {
-    res.status(502).json({
-      error: 'Could not generate recommendations with NASA data.',
-      detail: error.message
-    });
+    console.error(`[recomendações] NASA POWER falhou (${latitude}, ${longitude}): ${errorDetail(error)}`);
+    res.status(502).json(apiError('nasa_power_unavailable', 'Não foi possível gerar recomendações com dados da NASA.', errorDetail(error)));
   }
 });
 
 // Create Analysis (supports /api/analyses and legacy /api/analises)
 app.post(['/api/analyses', '/api/analises'], async (req, res) => {
   const request = normaliseRequest(req.body);
+
+  let climate;
   try {
-    const climate = await fetchPower(request.latitude, request.longitude);
+    climate = await fetchPower(request.latitude, request.longitude);
+  } catch (error) {
+    console.error(`[análise] NASA POWER falhou (${request.latitude}, ${request.longitude}): ${errorDetail(error)}`);
+    return res.status(502).json(apiError(
+      isTransientPowerError(error) ? 'nasa_power_unavailable' : 'nasa_power_error',
+      'Não foi possível obter os dados da NASA POWER. Tenta novamente em alguns segundos.',
+      errorDetail(error)
+    ));
+  }
+
+  try {
     const analysis = buildAnalysis(climate, request);
     analysisCache.set(analysis.id, analysis);
-    res.status(201).json(englishAnalysis(analysis));
+    res.status(201).json(contractAnalysis(analysis));
   } catch (error) {
-    res.status(502).json({
-      status: 'error',
-      error: {
-        code: 'nasa_power_error',
-        message: 'Could not generate analysis with NASA data.',
-        detail: error.message
-      }
-    });
+    // A bug here is not a NASA problem: log it and report it honestly.
+    console.error('[análise] erro ao construir a análise:', error);
+    res.status(500).json(apiError('analysis_error', 'Erro interno ao gerar a análise.', errorDetail(error)));
   }
 });
 
@@ -696,28 +822,16 @@ app.post(['/api/analyses', '/api/analises'], async (req, res) => {
 app.get(['/api/analyses/:id', '/api/analises/:id'], (req, res) => {
   const analysis = analysisCache.get(req.params.id);
   if (!analysis) {
-    return res.status(404).json({
-      status: 'error',
-      error: {
-        code: 'analysis_not_found',
-        message: 'Analysis not found.'
-      }
-    });
+    return res.status(404).json(apiError('analysis_not_found', 'Análise não encontrada.'));
   }
-  res.json(englishAnalysis(analysis));
+  res.json(contractAnalysis(analysis));
 });
 
 // Update Premises and Recalculate (supports /api/analyses/:id/premises and legacy /api/analises/:id/premissas)
 app.patch(['/api/analyses/:id/premises', '/api/analises/:id/premissas'], (req, res) => {
   const analysis = analysisCache.get(req.params.id);
   if (!analysis) {
-    return res.status(404).json({
-      status: 'error',
-      error: {
-        code: 'analysis_not_found',
-        message: 'Analysis not found.'
-      }
-    });
+    return res.status(404).json(apiError('analysis_not_found', 'Análise não encontrada.'));
   }
 
   const updatedRequest = { ...analysis.request };
@@ -759,7 +873,7 @@ app.patch(['/api/analyses/:id/premises', '/api/analises/:id/premissas'], (req, r
   updated.premissas = updated.premises;
 
   analysisCache.set(updated.id, updated);
-  res.json(englishAnalysis(updated));
+  res.json(contractAnalysis(updated));
 });
 
 // Fallback for static prototype interface in public/

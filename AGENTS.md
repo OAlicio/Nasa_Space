@@ -86,16 +86,16 @@ A barra lateral muda conforme o passo: (1) terreno, (2) situação atual, (3) ob
 6. **Validação local:** lista de premissas a validar. O utilizador edita e carrega em «Recalcular». A aplicação mostra o que mudou na ordem e na pontuação das estratégias.
 7. **Partilha (P2):** resumo curto para copiar para o WhatsApp.
 
-## 6. Contrato da API (PROPOSTA v0)
+## 6. Contrato da API (v0 — implementado no backend)
 
-> **Atenção:** este contrato é mantido também no AGENTS.md do backend. **Se mudar, atualizar os dois ficheiros.** Foi definido pelo mesmo programador, mas ainda não foi testado com o backend real. Todo o código que depende dele fica isolado em `src/lib/api.ts` e `src/types/analise.ts`, para a mudança ser barata. Quando o contrato mudar, atualizar este ficheiro, os tipos e o mock.
+> **Atenção:** este contrato é mantido também no AGENTS.md do frontend. **Se mudar, atualizar os dois ficheiros.** Já está acordado e implementado no backend (v0). Todo o código que depende dele fica isolado em `src/lib/api.ts` e `src/types/analysis.ts`. Quando o contrato mudar, atualizar este ficheiro, os tipos e o mock.
 
-**Endpoints propostos:**
+**Endpoints implementados:**
 
 - `GET /api/culturas`: lista de culturas do catálogo (`id`, `nome`), para os seletores do formulário.
-- `POST /api/analises`: cria uma análise. Resposta 202 com `id` e `estado`.
-- `GET /api/analises/{id}`: devolve a análise. O `estado` pode ser `a_processar`, `concluida` ou `erro`. Enquanto estiver `a_processar`, consultar de 2 em 2 ou 3 em 3 segundos, com limite de tempo e mensagem de erro clara.
-- `PATCH /api/analises/{id}/premissas`: envia as premissas corrigidas e devolve uma **nova versão** da mesma análise. Recalcular não faz novos pedidos aos serviços da NASA.
+- `POST /api/analises`: cria uma análise. **É síncrono**: responde `201` com a análise já calculada (`estado: "concluida"`) depois de consultar a NASA POWER (≈1–2 s). Não existe `a_processar`, por isso o frontend não precisa de fazer polling.
+- `GET /api/analises/{id}`: devolve uma análise já criada, também com `estado: "concluida"`. Fica como rede de segurança: o `waitForAnalysis` do frontend termina no primeiro pedido. Devolve `404` (`analysis_not_found`) se o id não existir no cache em memória (o cache perde-se quando o backend reinicia).
+- `PATCH /api/analises/{id}/premissas`: envia as premissas corrigidas e devolve uma **nova versão** da mesma análise (`versao_analise` incrementado). Recalcular não faz novos pedidos aos serviços da NASA.
 
 **Pedido (valores de exemplo; as opções exatas de solo e de objetivo ainda se confirmam com o backend):**
 
@@ -180,9 +180,10 @@ A barra lateral muda conforme o passo: (1) terreno, (2) situação atual, (3) ob
 **Regras para o frontend:**
 
 - O backend devolve o resultado **já calculado**. O frontend não faz contas agronómicas nem de pontuação.
-- Em caso de erro, o backend devolve `{ "erro": { "codigo": "...", "mensagem": "..." } }` (proposta). Mostrar uma mensagem em português com a opção de tentar de novo.
-- Dados parciais (por exemplo, um serviço da NASA falhou) vêm indicados em `metadados.avisos`. Mostrar sempre esses avisos.
-- Enquanto `estado` é `a_processar`, o campo `progresso` traz `{ "passo": 3, "total": 8, "descricao": "..." }`. Usar a `descricao` no ecrã «A analisar».
+- Em caso de erro, o backend devolve `{ "erro": { "codigo": "...", "mensagem": "..." } }` (em inglês, `error`, como alias). Mostrar a `mensagem` em português com a opção de tentar de novo. Códigos: `nasa_power_unavailable` (timeout, 429 ou 5xx da NASA POWER), `nasa_power_error` (pedido inválido à NASA POWER), `analysis_error` (erro interno no cálculo) e `analysis_not_found` (id desconhecido).
+- Resiliência da NASA POWER: o backend tenta até 3 vezes, com 12 s de timeout por tentativa (ajustável com `NASA_POWER_TIMEOUT_MS`). Se todas falharem e existir uma leitura em cache para a mesma célula de ~50 km, devolve essa leitura e acrescenta um aviso a `metadados.avisos`; se não existir, devolve `502` com `nasa_power_unavailable`.
+- Dados parciais (por exemplo, uma leitura em cache por a NASA POWER estar indisponível) vêm indicados em `metadados.avisos`. Mostrar sempre esses avisos.
+- `progresso` vem sempre a `null`, porque o POST é síncrono. Se no futuro passar a assíncrono, esta secção tem de ser revista.
 - Quando há cultura atual, a sequência começa com `epoca: 0` e `em_curso: true` (a cultura que ainda está plantada). Mostrá-la destacada e dizer que a rotação começa depois da colheita.
 - Campos opcionais podem vir a `null`. Os blocos P2 (`cuidados`, `declive`, `estado_epoca`) só aparecem quando existirem.
 
